@@ -2,7 +2,12 @@ package com.refugees.db.model;
 
 import java.util.Date;
 
-public class RefugeeUser {
+import net.hitachifbbot.DB;
+import net.hitachifbbot.NamminUser;
+import net.hitachifbbot.model.NamminUserData;
+
+public class RefugeeUser extends NamminUserData {
+	public NamminUser dbUserData;
 	//@Id
 	//@Column(name = "nammin_id")
 	private Integer userId	;
@@ -112,6 +117,25 @@ public class RefugeeUser {
 
 	public void setLastScreeningRequest(Date lastScreeningRequest) {
 		this.lastScreeningRequest = lastScreeningRequest;
+	}
+	public NamminUser getDBUserData() {
+		if(dbUserData==null)
+			dbUserData=new NamminUser(userId, userName, facebookInfo, email, password, passwordSalt, defaultLanguage, lastScreeningDate, lastScreeningRequest);
+		return dbUserData;
+	}
+
+	public static RefugeeUser build(NamminUserData u) {
+		RefugeeUser user=new RefugeeUser();
+		user.setUserId(u.getDbUserData().namminID);
+		user.setDefaultLanguage(u.getDbUserData().translateLangCode);
+		user.setEmail(u.getDbUserData().mailAddress);
+		user.setFacebookId(u.getDbUserData().facebookInfo);
+		user.setLastScreeningDate(u.getDbUserData().lastScreeningTime);
+		user.setLastScreeningRequest(u.getDbUserData().lastScreeningRequestTime);
+		user.setPassword(u.getDbUserData().passHash);
+		user.setPasswordSalt(u.getDbUserData().passSalt);
+		user.setUserName(u.getDbUserData().namminName);
+		return user;
 	}
 	
 }

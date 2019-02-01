@@ -1,0 +1,251 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.1
+-- Dumped by pg_dump version 11.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: blood_test_results; Type: TABLE; Schema: public; Owner: health
+--
+
+CREATE TABLE public.blood_test_results (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.blood_test_results OWNER TO health;
+
+--
+-- Name: findings; Type: TABLE; Schema: public; Owner: health
+--
+
+CREATE TABLE public.findings (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.findings OWNER TO health;
+
+--
+-- Name: inspection_results; Type: TABLE; Schema: public; Owner: health
+--
+
+CREATE TABLE public.inspection_results (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.inspection_results OWNER TO health;
+
+--
+-- Name: medical_checkup_interviews; Type: TABLE; Schema: public; Owner: health
+--
+
+CREATE TABLE public.medical_checkup_interviews (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.medical_checkup_interviews OWNER TO health;
+
+--
+-- Name: physical_informations; Type: TABLE; Schema: public; Owner: health
+--
+
+CREATE TABLE public.physical_informations (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.physical_informations OWNER TO health;
+
+--
+-- Data for Name: blood_test_results; Type: TABLE DATA; Schema: public; Owner: health
+--
+
+COPY public.blood_test_results (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: findings; Type: TABLE DATA; Schema: public; Owner: health
+--
+
+COPY public.findings (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: inspection_results; Type: TABLE DATA; Schema: public; Owner: health
+--
+
+COPY public.inspection_results (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+96d9ab70-eb4f-3861-9d11-88cbc08b96df	2018-09-27 00:00:00	blood_abo	3001#0000#0	{"blood_abo": "A"}	consolidate	2018-10-29 23:12:38.960324	consolidate	2018-10-29 23:12:38.960324
+96d9ab70-eb4f-3861-9d11-88cbc08b96df	2018-09-27 00:00:00	blood_pressure	3001#0000#0	{"systolic": "151", "diastolic": "100"}	consolidate	2018-10-29 23:12:38.960324	consolidate	2018-10-29 23:12:38.960324
+46e4f253-7614-3d9c-8925-154c2e745d1e	2018-09-27 00:00:00	blood_abo	3001#0000#0	{"blood_abo": "O"}	consolidate	2018-11-03 02:07:48.424837	consolidate	2018-11-03 02:07:48.424837
+46e4f253-7614-3d9c-8925-154c2e745d1e	2018-09-27 00:00:00	blood_pressure	3001#0000#0	{"systolic": "151", "diastolic": "100"}	consolidate	2018-11-03 02:07:48.424837	consolidate	2018-11-03 02:07:48.424837
+15cbbec4-3e89-3cf2-9d4d-3b527b0c9ddb	2018-09-27 00:00:00	blood_abo	3001#0000#0	{"blood_abo": "A"}	consolidate	2018-11-03 02:08:28.911865	consolidate	2018-11-03 02:08:28.911865
+15cbbec4-3e89-3cf2-9d4d-3b527b0c9ddb	2018-09-27 00:00:00	blood_pressure	3001#0000#0	{"systolic": "151", "diastolic": "100"}	consolidate	2018-11-03 02:08:28.911865	consolidate	2018-11-03 02:08:28.911865
+c902b192-e5a1-3840-9712-21c12add49c9	2018-09-27 00:00:00	blood_abo	3001#0000#0	{"blood_abo": "A"}	consolidate	2018-11-03 02:10:41.0042	consolidate	2018-11-03 02:10:41.0042
+c902b192-e5a1-3840-9712-21c12add49c9	2018-09-27 00:00:00	blood_pressure	3001#0000#0	{"systolic": "151", "diastolic": "100"}	consolidate	2018-11-03 02:10:41.0042	consolidate	2018-11-03 02:10:41.0042
+\.
+
+
+--
+-- Data for Name: medical_checkup_interviews; Type: TABLE DATA; Schema: public; Owner: health
+--
+
+COPY public.medical_checkup_interviews (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+bfff243f-b83c-3c63-9c42-9dfc63cd5990	2018-09-27 00:00:00	smoking	3001#0000#0	{"smoking": "はい"}	consolidate	2018-10-29 23:12:38.960324	consolidate	2018-10-29 23:12:38.960324
+d27ea2fe-c507-3d16-b472-b8b92e18996f	2018-09-27 00:00:00	smoking	3001#0000#0	{"smoking": "No"}	consolidate	2018-11-03 02:07:48.424837	consolidate	2018-11-03 02:07:48.424837
+b39a3442-38b2-3338-bb0d-0b0bd52064ef	2018-09-27 00:00:00	smoking	3001#0000#0	{"smoking": "no"}	consolidate	2018-11-03 02:08:28.911865	consolidate	2018-11-03 02:08:28.911865
+3a8113ec-8d5a-3351-ba59-08cf114cb37f	2018-09-27 00:00:00	smoking	3001#0000#0	{"smoking": "はい"}	consolidate	2018-11-03 02:10:41.0042	consolidate	2018-11-03 02:10:41.0042
+\.
+
+
+--
+-- Data for Name: physical_informations; Type: TABLE DATA; Schema: public; Owner: health
+--
+
+COPY public.physical_informations (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+bfff243f-b83c-3c63-9c42-9dfc63cd5990	2018-09-27 00:00:00	standard_info	3001#0000#0	{"height": "170.0", "weight": "70"}	consolidate	2018-10-29 23:12:38.960324	consolidate	2018-10-29 23:12:38.960324
+d27ea2fe-c507-3d16-b472-b8b92e18996f	2018-09-27 00:00:00	standard_info	3001#0000#0	{"height": "170.0", "weight": "68"}	consolidate	2018-11-03 02:07:48.424837	consolidate	2018-11-03 02:07:48.424837
+b39a3442-38b2-3338-bb0d-0b0bd52064ef	2018-09-27 00:00:00	standard_info	3001#0000#0	{"height": "170.0", "weight": "68"}	consolidate	2018-11-03 02:08:28.911865	consolidate	2018-11-03 02:08:28.911865
+3a8113ec-8d5a-3351-ba59-08cf114cb37f	2018-09-27 00:00:00	standard_info	3001#0000#0	{"height": "170.0", "weight": "68"}	consolidate	2018-11-03 02:10:41.0042	consolidate	2018-11-03 02:10:41.0042
+\.
+
+
+--
+-- Name: blood_test_results pk_blood_test_results; Type: CONSTRAINT; Schema: public; Owner: health
+--
+
+ALTER TABLE ONLY public.blood_test_results
+    ADD CONSTRAINT pk_blood_test_results PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: findings pk_findings; Type: CONSTRAINT; Schema: public; Owner: health
+--
+
+ALTER TABLE ONLY public.findings
+    ADD CONSTRAINT pk_findings PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: inspection_results pk_inspection_results; Type: CONSTRAINT; Schema: public; Owner: health
+--
+
+ALTER TABLE ONLY public.inspection_results
+    ADD CONSTRAINT pk_inspection_results PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: medical_checkup_interviews pk_medical_checkup_interviews; Type: CONSTRAINT; Schema: public; Owner: health
+--
+
+ALTER TABLE ONLY public.medical_checkup_interviews
+    ADD CONSTRAINT pk_medical_checkup_interviews PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: physical_informations pk_physical_informations; Type: CONSTRAINT; Schema: public; Owner: health
+--
+
+ALTER TABLE ONLY public.physical_informations
+    ADD CONSTRAINT pk_physical_informations PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: idx_blood_test_results_1; Type: INDEX; Schema: public; Owner: health
+--
+
+CREATE INDEX idx_blood_test_results_1 ON public.blood_test_results USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- Name: idx_findings_1; Type: INDEX; Schema: public; Owner: health
+--
+
+CREATE INDEX idx_findings_1 ON public.findings USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- Name: idx_inspection_results_1; Type: INDEX; Schema: public; Owner: health
+--
+
+CREATE INDEX idx_inspection_results_1 ON public.inspection_results USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- Name: idx_medical_checkup_interviews_1; Type: INDEX; Schema: public; Owner: health
+--
+
+CREATE INDEX idx_medical_checkup_interviews_1 ON public.medical_checkup_interviews USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- Name: idx_physical_informations_1; Type: INDEX; Schema: public; Owner: health
+--
+
+CREATE INDEX idx_physical_informations_1 ON public.physical_informations USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

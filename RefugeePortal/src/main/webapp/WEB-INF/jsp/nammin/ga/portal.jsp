@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('Faigh fiosruithe leighis ag Messenger le do thoil. Má tá tú agallamh cheana féin, athlódáil.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

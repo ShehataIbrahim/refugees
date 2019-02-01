@@ -8,6 +8,7 @@
 <%@ page import="net.hitachifbbot.filter.CSRFFilter"%>
 <!DOCTYPE html>
 <html>
+<!-- Bad Code to be enhanced -->
 <%
 	Locale locale = request.getLocale();
 	ResourceBundle msgBundle = ResourceBundle.getBundle("Messages", locale);
@@ -111,11 +112,14 @@ Object.size = function(obj) {
 					value = 1;
 				else
 					value = 0;
+				$('#' + qKey + '_check1')[0].disabled=true;
+				$('#' + qKey + '_check2')[0].disabled=true;
 			} else {
 				value = $('#' + qKey)[0].value;
+				$('#' + qKey)[0].disabled=true;
 			}
 			answers[questionKeys[i]] = value;
-			$('#' + qKey)[0].disabled=true;
+			//$('#' + qKey)[0].disabled=true;
 		}
 		//console.log(JSON.stringify(selectionsMap));
 		$.ajax({

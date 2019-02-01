@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('দয়া করে রসূলের চিকিৎসা অনুসন্ধান করুন। আপনি ইতিমধ্যে ইন্টারভিউ করা হয়েছে দয়া করে পুনরায় লোড করুন।')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

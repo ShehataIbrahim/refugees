@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('කරුණාකර මෙසෙන්ජර්හි වෛද්ය වාර්තා ලබාගන්න. ඔබ දැනටමත් සම්මුඛ පරීක්ෂණයට ලක් කර ඇත්නම්, කරුණාකර රload කරන්න.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

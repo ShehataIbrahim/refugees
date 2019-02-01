@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('Prašome kreiptis į "Messenger" dėl medicininių klausimų. Jei jau buvo apklausta, prašau iš naujo įkelti.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

@@ -2,6 +2,8 @@ package net.hitachifbbot.servlet;
 
 import net.hitachifbbot.Consts;
 import net.hitachifbbot.DB;
+import net.hitachifbbot.model.DoctorUser;
+import net.hitachifbbot.model.DoctorUserData;
 import net.hitachifbbot.model.PasswordHash;
 import net.hitachifbbot.session.AppSession;
 import net.hitachifbbot.utils.DBUtils;
@@ -40,7 +42,7 @@ public class LoginDoctorServlet extends AppServlet {
                 forwardJSP("/login/doctor.jsp",req,resp);
                 return;
             }
-            DB.DoctorUser doctorUser = DB.getDoctorUserByID(user);
+            DoctorUser doctorUser = DB.getDoctorUserByID(user);
 
             if(doctorUser == null){// 認証失敗
                 req.setAttribute("retry", Boolean.TRUE);
@@ -51,8 +53,8 @@ public class LoginDoctorServlet extends AppServlet {
             PasswordHash hash = new PasswordHash(doctorUser.passHash,doctorUser.passSalt);
 
             if(hash.isMatch(password)){ // 認証成功
-                AppSession.DoctorUserData userData = new AppSession.DoctorUserData();
-                userData.dbUserData = doctorUser;
+                DoctorUserData userData = new DoctorUserData();
+                userData.setDbUserData(doctorUser);
                 AppSession.setUserData(req,userData);
                 resp.sendRedirect(Consts.CATEGORY_LIST_URL);
                 return;

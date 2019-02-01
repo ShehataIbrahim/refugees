@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('தூதரகத்தில் மருத்துவ விசாரணையைப் பெறுக. நீங்கள் ஏற்கனவே நேர்காணலுக்கு வந்திருந்தால் தயவுசெய்து மீண்டும் ஏற்றவும்.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

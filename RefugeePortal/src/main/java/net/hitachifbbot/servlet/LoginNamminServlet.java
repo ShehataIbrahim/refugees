@@ -2,6 +2,8 @@ package net.hitachifbbot.servlet;
 
 import net.hitachifbbot.Consts;
 import net.hitachifbbot.DB;
+import net.hitachifbbot.NamminUser;
+import net.hitachifbbot.model.NamminUserData;
 import net.hitachifbbot.model.PasswordHash;
 import net.hitachifbbot.node.HubotCaller;
 import net.hitachifbbot.session.AppSession;
@@ -24,7 +26,7 @@ public class LoginNamminServlet extends AppServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        forwardJSP("/login/nammin.jsp",req,resp);
+        forwardJSP("/login/userLogin.jsp",req,resp);
     }
 
     /**
@@ -38,33 +40,28 @@ public class LoginNamminServlet extends AppServlet {
             final String password = req.getParameter("password");
             if(user == null || password == null){// 認証失敗
                 req.setAttribute("retry", Boolean.TRUE);
-                forwardJSP("/login/nammin.jsp",req,resp);
+                forwardJSP("/login/userLogin.jsp",req,resp);
                 return;
             }
-            DB.NamminUser namminUser = DB.getNamminUserByMailAddress(user);
+            NamminUser namminUser = DB.getNamminUserByMailAddress(user);
 
             if(namminUser == null){// 認証失敗
                 req.setAttribute("retry", Boolean.TRUE);
-                forwardJSP("/login/nammin.jsp",req,resp);
+                forwardJSP("/login/userLogin.jsp",req,resp);
                 return;
             }
 
             PasswordHash hash = new PasswordHash(namminUser.passHash,namminUser.passSalt);
             if(hash.isMatch(password)){ // 認証成功
-                AppSession.NamminUserData userData = new AppSession.NamminUserData();
-                userData.dbUserData = namminUser;
+                NamminUserData userData = new NamminUserData();
+                userData.setDbUserData(namminUser);
 
                 AppSession.setUserData(req, userData);
-
-                if (userData.dbUserData.lastScreeningRequestTime == null){ // 最終スクリーニング時間が指定されていない=スクリーニングまだなら
-                    HubotCaller.requestScreening(userData.dbUserData.namminID);
-                }
-
                 resp.sendRedirect(Consts.NAMMIN_PORTAL_SERVLET_URL);
                 return;
             }else{ // 認証失敗
                 req.setAttribute("retry", Boolean.TRUE);
-                forwardJSP("/login/nammin.jsp",req,resp);
+                forwardJSP("/login/userLogin.jsp",req,resp);
                 return;
             }
         } catch (SQLException | InvalidKeySpecException | NoSuchAlgorithmException | DecoderException e) {

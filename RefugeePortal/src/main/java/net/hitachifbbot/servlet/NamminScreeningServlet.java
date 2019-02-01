@@ -17,7 +17,7 @@ public class NamminScreeningServlet extends AppServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            ArrayList<DB.ScreeningResultSet> answer = DB.getLastScreeningAnswer(AppSession.getNamminUserData(req).dbUserData.namminID);
+            ArrayList<DB.ScreeningResultSet> answer = DB.getLastScreeningAnswer(AppSession.getNamminUserData(req).getDbUserData().namminID);
             HashMap<String, String> answers = new HashMap<>();
             for(DB.ScreeningResultSet a : answer){
                 answers.put("" + a.screeningQID, a.answer);

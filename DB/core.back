@@ -1,0 +1,944 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.1
+-- Dumped by pg_dump version 11.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: anchor_resources; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.anchor_resources (
+    anchor_key uuid NOT NULL,
+    resource_type character varying(26) NOT NULL,
+    resource_key uuid NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.anchor_resources OWNER TO core;
+
+--
+-- Name: auth_keys; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.auth_keys (
+    auth_key uuid NOT NULL,
+    ip_addresses character varying(100) NOT NULL,
+    resource_type character varying(26) DEFAULT NULL::character varying,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_keys OWNER TO core;
+
+--
+-- Name: consolidation_items; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.consolidation_items (
+    from_resource_type character varying(26) NOT NULL,
+    from_item_name character varying(100) NOT NULL,
+    from_item_caption character varying(100) NOT NULL,
+    from_is_reference_datetime character varying(1) NOT NULL,
+    to_db_name character varying(30) DEFAULT NULL::character varying,
+    to_resource_type character varying(26) DEFAULT NULL::character varying,
+    to_table_caption character varying(100) DEFAULT NULL::character varying,
+    to_table_name character varying(30) DEFAULT NULL::character varying,
+    to_item_class_caption character varying(100) DEFAULT NULL::character varying,
+    to_item_class_code character varying(100) DEFAULT NULL::character varying,
+    to_item_caption character varying(100) DEFAULT NULL::character varying,
+    to_item_name character varying(100) DEFAULT NULL::character varying,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.consolidation_items OWNER TO core;
+
+--
+-- Name: consolidation_priorities; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.consolidation_priorities (
+    db_name character varying(30) NOT NULL,
+    table_caption character varying(100) NOT NULL,
+    table_name character varying(30) NOT NULL,
+    priority numeric(8,0) NOT NULL,
+    resource_type character varying(26) NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.consolidation_priorities OWNER TO core;
+
+--
+-- Name: items; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.items (
+    name character varying(100) NOT NULL,
+    caption character varying(100) NOT NULL,
+    db_name character varying(30) NOT NULL,
+    resource_type character varying(26) NOT NULL,
+    table_caption character varying(100) NOT NULL,
+    table_name character varying(30) NOT NULL,
+    class_caption character varying(100) NOT NULL,
+    class_code character varying(100) NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.items OWNER TO core;
+
+--
+-- Name: log_api_call; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.log_api_call (
+    sequence_id numeric(10,0) NOT NULL,
+    result character varying(1) NOT NULL,
+    api_name character varying(100) NOT NULL,
+    api_parameters text,
+    message_id character varying(6) DEFAULT ''::character varying NOT NULL,
+    message text NOT NULL,
+    system_message text,
+    ip_address character varying(40) NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.log_api_call OWNER TO core;
+
+--
+-- Name: log_system; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.log_system (
+    sequence_id numeric(10,0) NOT NULL,
+    process_number numeric(10,0) NOT NULL,
+    level character varying(1) NOT NULL,
+    event_code character varying(16) NOT NULL,
+    message text DEFAULT ''::text NOT NULL,
+    function_name character varying(100) NOT NULL,
+    derived_from character varying(26) DEFAULT NULL::character varying,
+    ip_address character varying(40) NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.log_system OWNER TO core;
+
+--
+-- Name: provisional_sql_templates; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.provisional_sql_templates (
+    name character varying(30) NOT NULL,
+    sql text NOT NULL,
+    db_name character varying(30) NOT NULL,
+    response_type character varying(10) NOT NULL
+);
+
+
+ALTER TABLE public.provisional_sql_templates OWNER TO core;
+
+--
+-- Name: resource_types; Type: TABLE; Schema: public; Owner: core
+--
+
+CREATE TABLE public.resource_types (
+    type character varying(26) NOT NULL,
+    caption character varying(100) NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.resource_types OWNER TO core;
+
+--
+-- Name: seq_anchor_key; Type: SEQUENCE; Schema: public; Owner: core
+--
+
+CREATE SEQUENCE public.seq_anchor_key
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_anchor_key OWNER TO core;
+
+--
+-- Name: seq_log_api_call; Type: SEQUENCE; Schema: public; Owner: core
+--
+
+CREATE SEQUENCE public.seq_log_api_call
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_log_api_call OWNER TO core;
+
+--
+-- Name: seq_log_system_id; Type: SEQUENCE; Schema: public; Owner: core
+--
+
+CREATE SEQUENCE public.seq_log_system_id
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_log_system_id OWNER TO core;
+
+--
+-- Name: seq_log_system_process_number; Type: SEQUENCE; Schema: public; Owner: core
+--
+
+CREATE SEQUENCE public.seq_log_system_process_number
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_log_system_process_number OWNER TO core;
+
+--
+-- Name: seq_resource_key; Type: SEQUENCE; Schema: public; Owner: core
+--
+
+CREATE SEQUENCE public.seq_resource_key
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seq_resource_key OWNER TO core;
+
+--
+-- Data for Name: anchor_resources; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.anchor_resources (anchor_key, resource_type, resource_key, created_by, created_at, updated_by, updated_at) FROM stdin;
+1c86be41-cfcf-31eb-ad0f-e367d732a11f	3001#0000#0	20c682d9-0ea3-3d27-987e-307a4d75b422	consolidate	2018-10-29 18:03:10.13763	consolidate	2018-10-29 18:03:10.13763
+1c86be41-cfcf-31eb-ad0f-e367d732a11f	0100#0100#1	4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	consolidate	2018-10-29 18:03:10.13763	consolidate	2018-10-29 18:03:10.13763
+1c86be41-cfcf-31eb-ad0f-e367d732a11f	0200#0100#1	d27ea2fe-c507-3d16-b472-b8b92e18996f	consolidate	2018-10-29 18:03:10.13763	consolidate	2018-10-29 18:03:10.13763
+1c86be41-cfcf-31eb-ad0f-e367d732a11f	0200#0200#1	46e4f253-7614-3d9c-8925-154c2e745d1e	consolidate	2018-10-29 18:03:10.13763	consolidate	2018-10-29 18:03:10.13763
+2dc876a9-6ea7-36fe-8207-f91cf1b4f189	3001#0000#0	63346aa6-3981-3a55-a10b-f77347638a69	consolidate	2018-10-29 23:12:19.995698	consolidate	2018-10-29 23:12:19.995698
+2dc876a9-6ea7-36fe-8207-f91cf1b4f189	0100#0100#1	184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	consolidate	2018-10-29 23:12:19.995698	consolidate	2018-10-29 23:12:19.995698
+2dc876a9-6ea7-36fe-8207-f91cf1b4f189	0200#0100#1	bfff243f-b83c-3c63-9c42-9dfc63cd5990	consolidate	2018-10-29 23:12:19.995698	consolidate	2018-10-29 23:12:19.995698
+2dc876a9-6ea7-36fe-8207-f91cf1b4f189	0200#0200#1	96d9ab70-eb4f-3861-9d11-88cbc08b96df	consolidate	2018-10-29 23:12:19.995698	consolidate	2018-10-29 23:12:19.995698
+d6bcb652-6ad4-3d4d-9dec-a6e798d3cdf6	3001#0000#0	49e3de7c-4131-3b7a-b237-9026d083b591	consolidate	2018-11-03 02:08:28.873883	consolidate	2018-11-03 02:08:28.873883
+d6bcb652-6ad4-3d4d-9dec-a6e798d3cdf6	0100#0100#1	b7900657-c891-3e3e-809e-9c73a26683a3	consolidate	2018-11-03 02:08:28.873883	consolidate	2018-11-03 02:08:28.873883
+d6bcb652-6ad4-3d4d-9dec-a6e798d3cdf6	0200#0100#1	b39a3442-38b2-3338-bb0d-0b0bd52064ef	consolidate	2018-11-03 02:08:28.873883	consolidate	2018-11-03 02:08:28.873883
+d6bcb652-6ad4-3d4d-9dec-a6e798d3cdf6	0200#0200#1	15cbbec4-3e89-3cf2-9d4d-3b527b0c9ddb	consolidate	2018-11-03 02:08:28.873883	consolidate	2018-11-03 02:08:28.873883
+6aeeed88-165e-3911-b960-e0f7aef947e9	3001#0000#0	d37bb564-6fa2-36ac-815c-47e5a91d363e	consolidate	2018-11-03 02:10:40.989356	consolidate	2018-11-03 02:10:40.989356
+6aeeed88-165e-3911-b960-e0f7aef947e9	0100#0100#1	21d5f35f-4eda-3683-b9be-40c5ab45ae87	consolidate	2018-11-03 02:10:40.989356	consolidate	2018-11-03 02:10:40.989356
+6aeeed88-165e-3911-b960-e0f7aef947e9	0200#0100#1	3a8113ec-8d5a-3351-ba59-08cf114cb37f	consolidate	2018-11-03 02:10:40.989356	consolidate	2018-11-03 02:10:40.989356
+6aeeed88-165e-3911-b960-e0f7aef947e9	0200#0200#1	c902b192-e5a1-3840-9712-21c12add49c9	consolidate	2018-11-03 02:10:40.989356	consolidate	2018-11-03 02:10:40.989356
+\.
+
+
+--
+-- Data for Name: auth_keys; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.auth_keys (auth_key, ip_addresses, resource_type, created_by, created_at, updated_by, updated_at) FROM stdin;
+99d64750-200a-4a4a-bcbe-3094686560b0	127.0.0.1;0:0:0:0:0:0:0:1	1001#4701#1360005000132	setup	2018-10-29 07:23:45.18629	setup	2018-10-29 07:23:45.18629
+a9fe6750-5353-4b99-a597-3b45c4fc8806	127.0.0.1;0:0:0:0:0:0:0:1	1002#0047#00470013	setup	2018-10-29 07:23:45.192279	setup	2018-10-29 07:23:45.192279
+ed94b7d8-35cb-4475-bd59-ac73842d0298	127.0.0.1;0:0:0:0:0:0:0:1	1003#0471#00470013	setup	2018-10-29 07:23:45.212674	setup	2018-10-29 07:23:45.212674
+7ac457c3-ab67-4d10-a66b-a852d22eea25	127.0.0.1;0:0:0:0:0:0:0:1	1003#0472#00470013	setup	2018-10-29 07:23:45.218721	setup	2018-10-29 07:23:45.218721
+d95bf0b7-8162-4161-9d2a-af2da771f3c3	127.0.0.1;0:0:0:0:0:0:0:1	1003#0473#00470013	setup	2018-10-29 07:23:45.235457	setup	2018-10-29 07:23:45.235457
+cceb288e-c399-4977-9f8c-61482d17bd31	127.0.0.1;0:0:0:0:0:0:0:1	1003#0474#00470013	setup	2018-10-29 07:23:45.248154	setup	2018-10-29 07:23:45.248154
+d49643d6-3f95-4881-93c9-151b9d917d22	192.168.8.100	3001#0000#0	setup	2018-10-29 07:27:26.987837	setup	2018-10-29 07:27:26.987837
+2ea7dc1a-9700-4d74-8740-0052686712ee	127.0.0.1	3001#0000#0	setup	2018-10-29 07:27:26.99324	setup	2018-10-29 07:27:26.99324
+0b8fe32b-78c2-4fd0-80c5-043d665831af	192.168.8.101	3001#0000#0	setup	2018-10-29 14:00:01.547218	setup	2018-10-29 14:00:01.547218
+\.
+
+
+--
+-- Data for Name: consolidation_items; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.consolidation_items (from_resource_type, from_item_name, from_item_caption, from_is_reference_datetime, to_db_name, to_resource_type, to_table_caption, to_table_name, to_item_class_caption, to_item_class_code, to_item_caption, to_item_name, created_by, created_at, updated_by, updated_at) FROM stdin;
+1001#4701#1360005000132	patient_id	??ID	N	personal	0100#0100#1	????	personal_informations	?????????ID	patient_id	??ID	patient_id	setup	2018-10-29 07:24:25.45889	setup	2018-10-29 07:24:25.45889
+1001#4701#1360005000132	examination_date	???????	Y	\N	\N							setup	2018-10-29 07:24:25.47753	setup	2018-10-29 07:24:25.47753
+1001#4701#1360005000132	insurer	?????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	?????	insurer	setup	2018-10-29 07:24:25.523489	setup	2018-10-29 07:24:25.523489
+1001#4701#1360005000132	insured_mark	????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	???????	insured_mark	setup	2018-10-29 07:24:25.533082	setup	2018-10-29 07:24:25.533082
+1001#4701#1360005000132	insured_number	????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	???????	insured_number	setup	2018-10-29 07:24:25.544156	setup	2018-10-29 07:24:25.544156
+1001#4701#1360005000132	katakana_full_name	????	N	personal	0100#0100#1	????	personal_informations	??????	katakana_full_name	??????	katakana_full_name	setup	2018-10-29 07:24:25.554775	setup	2018-10-29 07:24:25.554775
+1001#4701#1360005000132	full_name	??(?)	N	personal	0100#0100#1	????	personal_informations	??	full_name	??	full_name	setup	2018-10-29 07:24:25.566766	setup	2018-10-29 07:24:25.566766
+1001#4701#1360005000132	birth_day	????	N	personal	0100#0100#1	????	personal_informations	????	birth_day	????	birth_day	setup	2018-10-29 07:24:25.577914	setup	2018-10-29 07:24:25.577914
+1001#4701#1360005000132	sex	??	N	personal	0100#0100#1	????	personal_informations	??	sex	??	sex	setup	2018-10-29 07:24:25.590694	setup	2018-10-29 07:24:25.590694
+1001#4701#1360005000132	postal_code	????	N	personal	0100#0100#1	????	personal_informations	????	postal_code	????	postal_code	setup	2018-10-29 07:24:25.599024	setup	2018-10-29 07:24:25.599024
+1001#4701#1360005000132	address	??	N	personal	0100#0100#1	????	personal_informations	??	address	??	address	setup	2018-10-29 07:24:25.607295	setup	2018-10-29 07:24:25.607295
+1001#4701#1360005000132	target	????	N	personal	0100#0100#1	????	personal_informations	????	consent_info	??	target	setup	2018-10-29 07:24:25.633403	setup	2018-10-29 07:24:25.633403
+1001#4701#1360005000132	status	????	N	personal	0100#0100#1	????	personal_informations	????	consent_info	??	status	setup	2018-10-29 07:24:25.645095	setup	2018-10-29 07:24:25.645095
+1001#4701#1360005000132	height	??	N	health	0200#0100#1	????	physical_informations	????	standard_info	??	height	setup	2018-10-29 07:24:25.655006	setup	2018-10-29 07:24:25.655006
+1001#4701#1360005000132	weight	??	N	health	0200#0100#1	????	physical_informations	????	standard_info	??	weight	setup	2018-10-29 07:24:25.664689	setup	2018-10-29 07:24:25.664689
+1001#4701#1360005000132	bmi	BMI	N	health	0200#0100#1	????	physical_informations	BMI	bmi	BMI	bmi	setup	2018-10-29 07:24:25.677055	setup	2018-10-29 07:24:25.677055
+1001#4701#1360005000132	waist_circumference	??(??)	N	health	0200#0100#1	????	physical_informations	??	waist_circumference	??	waist_circumference	setup	2018-10-29 07:24:25.684758	setup	2018-10-29 07:24:25.684758
+1001#4701#1360005000132	sitting_height	??	N	health	0200#0100#1	????	physical_informations	??	sitting_height	??	sitting_height	setup	2018-10-29 07:24:25.699056	setup	2018-10-29 07:24:25.699056
+1001#4701#1360005000132	chest_circumference	??	N	health	0200#0100#1	????	physical_informations	??	chest_circumference	??	chest_circumference	setup	2018-10-29 07:24:25.711281	setup	2018-10-29 07:24:25.711281
+1001#4701#1360005000132	visceral_fat	?????	N	health	0200#0100#1	????	physical_informations	??????	visceral_fat	??????	visceral_fat	setup	2018-10-29 07:24:25.722721	setup	2018-10-29 07:24:25.722721
+1001#4701#1360005000132	obesity	???	N	health	0200#0100#1	????	physical_informations	???	obesity	???	obesity	setup	2018-10-29 07:24:25.732326	setup	2018-10-29 07:24:25.732326
+1001#4701#1360005000132	past_history	??? ???	N	health	0200#0100#1	??????	medical_checkup_interviews	???	past_history	???	past_history	setup	2018-10-29 07:24:25.744684	setup	2018-10-29 07:24:25.744684
+1001#4701#1360005000132	subjective_findings	?????? ???	N	health	0200#0200#1	????	inspection_results	??????	subjective_findings	????	subjective_findings	setup	2018-10-29 07:24:25.756331	setup	2018-10-29 07:24:25.756331
+1001#4701#1360005000132	objective_findings	?????? ?????	N	health	0200#0200#1	????	inspection_results	??????	objective_findings	????	objective_findings	setup	2018-10-29 07:24:25.7652	setup	2018-10-29 07:24:25.7652
+1001#4701#1360005000132	medical_examination_findings	????	N	health	0200#0200#1	??	findings	????	medical_examination_findings	????	medical_examination_findings	setup	2018-10-29 07:24:25.777332	setup	2018-10-29 07:24:25.777332
+1001#4701#1360005000132	repeated_saliva_swallowing	?????????	N	health	0200#0200#1	????	inspection_results	?????????	repeated_saliva_swallowing	?????????	repeated_saliva_swallowing	setup	2018-10-29 07:24:25.787277	setup	2018-10-29 07:24:25.787277
+1001#4701#1360005000132	systolic	?????(1??)	N	health	0200#0200#1	????	inspection_results	??	blood_pressure	?????	systolic	setup	2018-10-29 07:24:25.799258	setup	2018-10-29 07:24:25.799258
+1001#4701#1360005000132	diastolic	?????(1??)	N	health	0200#0200#1	????	inspection_results	??	blood_pressure	?????	diastolic	setup	2018-10-29 07:24:25.810902	setup	2018-10-29 07:24:25.810902
+1001#4701#1360005000132	pulse_wave_increasing_coefficient	??????	N	health	0200#0200#1	????	inspection_results	??????	pulse_wave_increasing_coefficient	??????	pulse_wave_increasing_coefficient	setup	2018-10-29 07:24:25.822152	setup	2018-10-29 07:24:25.822152
+1001#4701#1360005000132	pluse	??	N	health	0200#0200#1	????	inspection_results	??	pluse	??	pluse	setup	2018-10-29 07:24:25.830641	setup	2018-10-29 07:24:25.830641
+1001#4701#1360005000132	blood_sampling_time	????(??)	N	health	0200#0200#1	????	inspection_results	????	blood_sampling_time	????(??)	blood_sampling_time	setup	2018-10-29 07:24:25.845404	setup	2018-10-29 07:24:25.845404
+1001#4701#1360005000132	triglyceride	????(???????)	N	health	0200#0200#1	????	inspection_results	????(???????)	triglyceride	????(???????)	triglyceride	setup	2018-10-29 07:24:25.857145	setup	2018-10-29 07:24:25.857145
+1001#4701#1360005000132	atherosclerotic_index	??????	N	health	0200#0200#1	????	inspection_results	??????	atherosclerotic_index	??????	atherosclerotic_index	setup	2018-10-29 07:24:25.864965	setup	2018-10-29 07:24:25.864965
+1001#4701#1360005000132	hdl	HDL???????	N	health	0200#0200#1	????	inspection_results	???????	cholesterol	HDL???????	hdl	setup	2018-10-29 07:24:25.874828	setup	2018-10-29 07:24:25.874828
+1001#4701#1360005000132	ldl	LDL???????	N	health	0200#0200#1	????	inspection_results	???????	cholesterol	LDL???????	ldl	setup	2018-10-29 07:24:25.888697	setup	2018-10-29 07:24:25.888697
+1001#4701#1360005000132	total_cholesterol	????????	N	health	0200#0200#1	????	inspection_results	???????	cholesterol	????????	total_cholesterol	setup	2018-10-29 07:24:25.899031	setup	2018-10-29 07:24:25.899031
+1001#4701#1360005000132	rate_l_h	L/H?	N	health	0200#0200#1	????	inspection_results	???????	cholesterol	L/H?	rate_l_h	setup	2018-10-29 07:24:25.911996	setup	2018-10-29 07:24:25.911996
+1001#4701#1360005000132	total_bilirubin	??????	N	health	0200#0200#1	????	inspection_results	?????	bilirubin	??????	total_bilirubin	setup	2018-10-29 07:24:25.921051	setup	2018-10-29 07:24:25.921051
+1001#4701#1360005000132	direct	???????	N	health	0200#0200#1	????	inspection_results	?????	bilirubin	???????	direct	setup	2018-10-29 07:24:25.931373	setup	2018-10-29 07:24:25.931373
+1001#4701#1360005000132	che	CHE	N	health	0200#0200#1	????	inspection_results	CHE	che	CHE	che	setup	2018-10-29 07:24:25.943692	setup	2018-10-29 07:24:25.943692
+1001#4701#1360005000132	lap	LAP	N	health	0200#0200#1	????	inspection_results	LAP	lap	LAP	lap	setup	2018-10-29 07:24:25.954852	setup	2018-10-29 07:24:25.954852
+1001#4701#1360005000132	ttt	TTT	N	health	0200#0200#1	????	inspection_results	TTT	ttt	TTT	ttt	setup	2018-10-29 07:24:25.964992	setup	2018-10-29 07:24:25.964992
+1001#4701#1360005000132	ztt	ZTT	N	health	0200#0200#1	????	inspection_results	ZTT	ztt	ZTT	ztt	setup	2018-10-29 07:24:25.980354	setup	2018-10-29 07:24:25.980354
+1001#4701#1360005000132	asl	GOT(AST)	N	health	0200#0200#1	????	inspection_results	ASL(GOT)	asl	ASL(GOT)	asl	setup	2018-10-29 07:24:25.989884	setup	2018-10-29 07:24:25.989884
+1001#4701#1360005000132	alt	GPT(ALT)	N	health	0200#0200#1	????	inspection_results	ALT(GPT)	alt	ALT(GPT)	alt	setup	2018-10-29 07:24:26.008589	setup	2018-10-29 07:24:26.008589
+1001#4701#1360005000132	?gtp	?-GT(?-GTP)	N	health	0200#0200#1	????	inspection_results	?GTP	?gtp	?GTP	?gtp	setup	2018-10-29 07:24:26.01961	setup	2018-10-29 07:24:26.01961
+1001#4701#1360005000132	alp	ALP	N	health	0200#0200#1	????	inspection_results	ALP	alp	ALP	alp	setup	2018-10-29 07:24:26.030545	setup	2018-10-29 07:24:26.030545
+1001#4701#1360005000132	ldh	LDH	N	health	0200#0200#1	????	inspection_results	LDH	ldh	LDH	ldh	setup	2018-10-29 07:24:26.038448	setup	2018-10-29 07:24:26.038448
+1001#4701#1360005000132	serum_amylase	???????	N	health	0200#0200#1	????	inspection_results	???????	serum_amylase	???????	serum_amylase	setup	2018-10-29 07:24:26.052934	setup	2018-10-29 07:24:26.052934
+1001#4701#1360005000132	cpk	CPK	N	health	0200#0200#1	????	inspection_results	CPK	cpk	CPK	cpk	setup	2018-10-29 07:24:26.063587	setup	2018-10-29 07:24:26.063587
+1001#4701#1360005000132	serum_creatinine	????????	N	health	0200#0200#1	????	inspection_results	????????	serum_creatinine	????????	serum_creatinine	setup	2018-10-29 07:24:26.074894	setup	2018-10-29 07:24:26.074894
+1001#4701#1360005000132	egfr	eGFR	N	health	0200#0200#1	????	inspection_results	eGFR	egfr	eGFR	egfr	setup	2018-10-29 07:24:26.085834	setup	2018-10-29 07:24:26.085834
+1001#4701#1360005000132	serum_uric_acid	????	N	health	0200#0200#1	????	inspection_results	????	serum_uric_acid	????	serum_uric_acid	setup	2018-10-29 07:24:26.098129	setup	2018-10-29 07:24:26.098129
+1001#4701#1360005000132	serum_iron	???	N	health	0200#0200#1	????	inspection_results	???	serum_iron	???	serum_iron	setup	2018-10-29 07:24:26.106969	setup	2018-10-29 07:24:26.106969
+1001#4701#1360005000132	tibc	TIBC	N	health	0200#0200#1	????	inspection_results	TIBC	tibc	TIBC	tibc	setup	2018-10-29 07:24:26.130644	setup	2018-10-29 07:24:26.130644
+1001#4701#1360005000132	uibc	UIBC	N	health	0200#0200#1	????	inspection_results	UIBC	uibc	UIBC	uibc	setup	2018-10-29 07:24:26.146064	setup	2018-10-29 07:24:26.146064
+1001#4701#1360005000132	bun	BUN	N	health	0200#0200#1	????	inspection_results	BUN	bun	BUN	bun	setup	2018-10-29 07:24:26.153966	setup	2018-10-29 07:24:26.153966
+1001#4701#1360005000132	mg	Mg	N	health	0200#0200#1	????	inspection_results	Mg	mg	Mg	mg	setup	2018-10-29 07:24:26.162307	setup	2018-10-29 07:24:26.162307
+1001#4701#1360005000132	na	Na	N	health	0200#0200#1	????	inspection_results	Na	na	Na	na	setup	2018-10-29 07:24:26.184429	setup	2018-10-29 07:24:26.184429
+1001#4701#1360005000132	k	K	N	health	0200#0200#1	????	inspection_results	K	k	K	k	setup	2018-10-29 07:24:26.195536	setup	2018-10-29 07:24:26.195536
+1001#4701#1360005000132	cl	Cl	N	health	0200#0200#1	????	inspection_results	Cl	cl	Cl	cl	setup	2018-10-29 07:24:26.206873	setup	2018-10-29 07:24:26.206873
+1001#4701#1360005000132	ca	Ca	N	health	0200#0200#1	????	inspection_results	Ca	ca	Ca	ca	setup	2018-10-29 07:24:26.219241	setup	2018-10-29 07:24:26.219241
+1001#4701#1360005000132	p	P	N	health	0200#0200#1	????	inspection_results	P	p	P	p	setup	2018-10-29 07:24:26.227422	setup	2018-10-29 07:24:26.227422
+1001#4701#1360005000132	total_protein	???	N	health	0200#0200#1	????	inspection_results	???	total_protein	???	total_protein	setup	2018-10-29 07:24:26.24117	setup	2018-10-29 07:24:26.24117
+1001#4701#1360005000132	albumin	?????	N	health	0200#0200#1	????	inspection_results	?????	albumin	?????	albumin	setup	2018-10-29 07:24:26.2525	setup	2018-10-29 07:24:26.2525
+1001#4701#1360005000132	a_g	A/G	N	health	0200#0200#1	????	inspection_results	A/G	a_g	A/G	a_g	setup	2018-10-29 07:24:26.261545	setup	2018-10-29 07:24:26.261545
+1001#4701#1360005000132	crp	CRP	N	health	0200#0200#1	????	inspection_results	CRP	crp	CRP	crp	setup	2018-10-29 07:24:26.273376	setup	2018-10-29 07:24:26.273376
+1001#4701#1360005000132	ra	RA	N	health	0200#0200#1	????	inspection_results	RA	ra	RA	ra	setup	2018-10-29 07:24:26.283781	setup	2018-10-29 07:24:26.283781
+1001#4701#1360005000132	rpr	RPR	N	health	0200#0200#1	????	inspection_results	RPR	rpr	RPR	rpr	setup	2018-10-29 07:24:26.295478	setup	2018-10-29 07:24:26.295478
+1001#4701#1360005000132	tpha	TPHA	N	health	0200#0200#1	????	inspection_results	TPHA	tpha	TPHA	tpha	setup	2018-10-29 07:24:26.307957	setup	2018-10-29 07:24:26.307957
+1001#4701#1360005000132	tsh	TSH	N	health	0200#0200#1	????	inspection_results	TSH	tsh	TSH	tsh	setup	2018-10-29 07:24:26.317601	setup	2018-10-29 07:24:26.317601
+1001#4701#1360005000132	ft3	FT3	N	health	0200#0200#1	????	inspection_results	FT3	ft3	FT3	ft3	setup	2018-10-29 07:24:26.330107	setup	2018-10-29 07:24:26.330107
+1001#4701#1360005000132	ft4	FT4	N	health	0200#0200#1	????	inspection_results	FT4	ft4	FT4	ft4	setup	2018-10-29 07:24:26.339697	setup	2018-10-29 07:24:26.339697
+1001#4701#1360005000132	psa	PSA(???????)	N	health	0200#0200#1	????	inspection_results	PSA(???????)	psa	PSA(???????)	psa	setup	2018-10-29 07:24:26.350398	setup	2018-10-29 07:24:26.350398
+1001#4701#1360005000132	bnp	BNP	N	health	0200#0200#1	????	inspection_results	BNP	bnp	BNP	bnp	setup	2018-10-29 07:24:26.362007	setup	2018-10-29 07:24:26.362007
+1001#4701#1360005000132	hbs_antigen	HBs??	N	health	0200#0200#1	????	inspection_results	HBs??	hbs_antigen	HBs??	hbs_antigen	setup	2018-10-29 07:24:26.373632	setup	2018-10-29 07:24:26.373632
+1001#4701#1360005000132	hbs_antibody	HBs??	N	health	0200#0200#1	????	inspection_results	HBs??	hbs_antibody	HBs??	hbs_antibody	setup	2018-10-29 07:24:26.384143	setup	2018-10-29 07:24:26.384143
+1001#4701#1360005000132	hcv_antibody	HCV??	N	health	0200#0200#1	????	inspection_results	HCV??	hcv_antibody	HCV??	hcv_antibody	setup	2018-10-29 07:24:26.397234	setup	2018-10-29 07:24:26.397234
+1001#4701#1360005000132	hcv_nucleic_acid_amplification_test	HCV??????	N	health	0200#0200#1	????	inspection_results	HCV??????	hcv_nucleic_acid_amplification_test	HCV??????	hcv_nucleic_acid_amplification_test	setup	2018-10-29 07:24:26.408132	setup	2018-10-29 07:24:26.408132
+1001#4701#1360005000132	lipase	????	N	health	0200#0200#1	????	inspection_results	????	lipase	????	lipase	setup	2018-10-29 07:24:26.415545	setup	2018-10-29 07:24:26.415545
+1001#4701#1360005000132	blood_glucose_any_time	????	N	health	0200#0200#1	????	inspection_results	??	blood_glucose	????	blood_glucose_any_time	setup	2018-10-29 07:24:26.431047	setup	2018-10-29 07:24:26.431047
+1001#4701#1360005000132	blood_glucose_load_before	??????	N	health	0200#0200#1	????	inspection_results	??	blood_glucose	????-?	blood_glucose_load_before	setup	2018-10-29 07:24:26.446079	setup	2018-10-29 07:24:26.446079
+1001#4701#1360005000132	blood_glucose_load_30	?????30	N	health	0200#0200#1	????	inspection_results	??	blood_glucose	????-30	blood_glucose_load_30	setup	2018-10-29 07:24:26.456158	setup	2018-10-29 07:24:26.456158
+1001#4701#1360005000132	blood_glucose_load_60	?????60	N	health	0200#0200#1	????	inspection_results	??	blood_glucose	????-60	blood_glucose_load_60	setup	2018-10-29 07:24:26.474251	setup	2018-10-29 07:24:26.474251
+1001#4701#1360005000132	blood_glucose_load_120	?????120	N	health	0200#0200#1	????	inspection_results	??	blood_glucose	????-120	blood_glucose_load_120	setup	2018-10-29 07:24:26.485935	setup	2018-10-29 07:24:26.485935
+1001#4701#1360005000132	insulin	?????	N	health	0200#0200#1	????	inspection_results	?????	insulin	?????	insulin	setup	2018-10-29 07:24:26.495997	setup	2018-10-29 07:24:26.495997
+1001#4701#1360005000132	insulin_load_before	?????????	N	health	0200#0200#1	????	inspection_results	?????	insulin	???????-?	insulin_load_before	setup	2018-10-29 07:24:26.507282	setup	2018-10-29 07:24:26.507282
+1001#4701#1360005000132	insulin_load_30	????????30	N	health	0200#0200#1	????	inspection_results	?????	insulin	???????-30	insulin_load_30	setup	2018-10-29 07:24:26.517748	setup	2018-10-29 07:24:26.517748
+1001#4701#1360005000132	insulin_load_60	????????60	N	health	0200#0200#1	????	inspection_results	?????	insulin	???????-60	insulin_load_60	setup	2018-10-29 07:24:26.530445	setup	2018-10-29 07:24:26.530445
+1001#4701#1360005000132	insulin_load_120	????????120	N	health	0200#0200#1	????	inspection_results	?????	insulin	???????-120	insulin_load_120	setup	2018-10-29 07:24:26.540841	setup	2018-10-29 07:24:26.540841
+1001#4701#1360005000132	jds	HbA1c(JDS)	N	health	0200#0200#1	????	inspection_results	HbA2c	hba2c	JDS	jds	setup	2018-10-29 07:24:26.552085	setup	2018-10-29 07:24:26.552085
+1001#4701#1360005000132	ngsp	HbA1c(NGSP)	N	health	0200#0200#1	????	inspection_results	HbA1c	hba1c	NGSP	ngsp	setup	2018-10-29 07:24:26.562952	setup	2018-10-29 07:24:26.562952
+1001#4701#1360005000132	homa_r	HOMA-R	N	health	0200#0200#1	????	inspection_results	HOMA-R	homa_r	HOMA-R	homa_r	setup	2018-10-29 07:24:26.57394	setup	2018-10-29 07:24:26.57394
+1001#4701#1360005000132	ca19_9	CA19-9	N	health	0200#0200#1	????	inspection_results	CA19-9	ca19_9	CA19-9	ca19_9	setup	2018-10-29 07:24:26.581474	setup	2018-10-29 07:24:26.581474
+1001#4701#1360005000132	ca125	CA125	N	health	0200#0200#1	????	inspection_results	CA125	ca125	CA125	ca125	setup	2018-10-29 07:24:26.598005	setup	2018-10-29 07:24:26.598005
+1001#4701#1360005000132	scc	SCC	N	health	0200#0200#1	????	inspection_results	SCC	scc	SCC	scc	setup	2018-10-29 07:24:26.607873	setup	2018-10-29 07:24:26.607873
+1001#4701#1360005000132	pivka_2	PIVKA?	N	health	0200#0200#1	????	inspection_results	PIVKA?	pivka_2	PIVKA?	pivka_2	setup	2018-10-29 07:24:26.61962	setup	2018-10-29 07:24:26.61962
+1001#4701#1360005000132	t_acp	T-ACP	N	health	0200#0200#1	????	inspection_results	T-ACP	t_acp	T-ACP	t_acp	setup	2018-10-29 07:24:26.629562	setup	2018-10-29 07:24:26.629562
+1001#4701#1360005000132	prostate_acp	???ACP	N	health	0200#0200#1	????	inspection_results	???ACP	prostate_acp	???ACP	prostate_acp	setup	2018-10-29 07:24:26.640912	setup	2018-10-29 07:24:26.640912
+1001#4701#1360005000132	rubella_eia	??(EIA)	N	health	0200#0200#1	????	inspection_results	??	rubella	??(EIA)	rubella_eia	setup	2018-10-29 07:24:26.651865	setup	2018-10-29 07:24:26.651865
+1001#4701#1360005000132	rubella_hi	??(HI)	N	health	0200#0200#1	????	inspection_results	??	rubella	??(HI)	rubella_hi	setup	2018-10-29 07:24:26.66379	setup	2018-10-29 07:24:26.66379
+1001#4701#1360005000132	varieg_eia	??(EIA)	N	health	0200#0200#1	????	inspection_results	??	varieg	??(EIA)	varieg_eia	setup	2018-10-29 07:24:26.674555	setup	2018-10-29 07:24:26.674555
+1001#4701#1360005000132	varieg_iaha	??(IAHA)	N	health	0200#0200#1	????	inspection_results	??	varieg	??(IAHA)	varieg_iaha	setup	2018-10-29 07:24:26.68479	setup	2018-10-29 07:24:26.68479
+1001#4701#1360005000132	mumps_eia	????(EIA)	N	health	0200#0200#1	????	inspection_results	????	mumps	????(EIA)	mumps_eia	setup	2018-10-29 07:24:26.695564	setup	2018-10-29 07:24:26.695564
+1001#4701#1360005000132	mumps_iaha	????(IAHA)	N	health	0200#0200#1	????	inspection_results	????	mumps	????(IAHA)	mumps_iaha	setup	2018-10-29 07:24:26.706694	setup	2018-10-29 07:24:26.706694
+1001#4701#1360005000132	measles_eia	??(EIA)	N	health	0200#0200#1	????	inspection_results	??	measles	??(EIA)	measles_eia	setup	2018-10-29 07:24:26.717677	setup	2018-10-29 07:24:26.717677
+1001#4701#1360005000132	measles_hi	??(HI)	N	health	0200#0200#1	????	inspection_results	??	measles	??(HI)	measles_hi	setup	2018-10-29 07:24:26.73001	setup	2018-10-29 07:24:26.73001
+1001#4701#1360005000132	measles_pa	??(PA)	N	health	0200#0200#1	????	inspection_results	??	measles	??(PA)	measles_pa	setup	2018-10-29 07:24:26.738762	setup	2018-10-29 07:24:26.738762
+1001#4701#1360005000132	hiv_elisa	HIV??ú??(ELISA)	N	health	0200#0200#1	????	inspection_results	HIV??ú??(ELISA)	hiv_elisa	HIV??ú??(ELISA)	hiv_elisa	setup	2018-10-29 07:24:26.748077	setup	2018-10-29 07:24:26.748077
+1001#4701#1360005000132	hbe_antigen_clea	HBe??(CLEA)	N	health	0200#0200#1	????	inspection_results	Hbe??(CLEA)	hbe_antigen_clea	Hbe??(CLEA)	hbe_antigen_clea	setup	2018-10-29 07:24:26.773855	setup	2018-10-29 07:24:26.773855
+1001#4701#1360005000132	hbe_antibody_clea	HBe??(CLEA)	N	health	0200#0200#1	????	inspection_results	Hbe??(CLEA)	hbe_antibody_clea	Hbe??(CLEA)	hbe_antibody_clea	setup	2018-10-29 07:24:26.783065	setup	2018-10-29 07:24:26.783065
+1001#4701#1360005000132	ha_antibody_eia	HA??(EIA)	N	health	0200#0200#1	????	inspection_results	HA??(EIA)	ha_antibody_eia	HA??(EIA)	ha_antibody_eia	setup	2018-10-29 07:24:26.79612	setup	2018-10-29 07:24:26.79612
+1001#4701#1360005000132	pylori_antibody	?????	N	health	0200#0200#1	????	inspection_results	?????	pylori_antibody	?????	pylori_antibody	setup	2018-10-29 07:24:26.807159	setup	2018-10-29 07:24:26.807159
+1001#4701#1360005000132	antinuclear_antibody_fa	????(FA)	N	health	0200#0200#1	????	inspection_results	????(FA)	antinuclear_antibody_fa	????(FA)	antinuclear_antibody_fa	setup	2018-10-29 07:24:26.817441	setup	2018-10-29 07:24:26.817441
+1001#4701#1360005000132	ferritin	?????	N	health	0200#0200#1	????	inspection_results	?????	ferritin	?????	ferritin	setup	2018-10-29 07:24:26.82974	setup	2018-10-29 07:24:26.82974
+1001#4701#1360005000132	aso	ASO	N	health	0200#0200#1	????	inspection_results	ASO	aso	ASO	aso	setup	2018-10-29 07:24:26.839904	setup	2018-10-29 07:24:26.839904
+1001#4701#1360005000132	high_sensitivity_crp	???CRP	N	health	0200#0200#1	????	inspection_results	???CRP	high_sensitivity_crp	???CRP	high_sensitivity_crp	setup	2018-10-29 07:24:26.850988	setup	2018-10-29 07:24:26.850988
+1001#4701#1360005000132	pepsinogen	??????	N	health	0200#0200#1	????	inspection_results	??????	pepsinogen	??????	pepsinogen	setup	2018-10-29 07:24:26.861791	setup	2018-10-29 07:24:26.861791
+1001#4701#1360005000132	pepsinogen_1	??????1	N	health	0200#0200#1	????	inspection_results	??????	pepsinogen	??????1	pepsinogen_1	setup	2018-10-29 07:24:26.873137	setup	2018-10-29 07:24:26.873137
+1001#4701#1360005000132	pepsinogen_2	??????2	N	health	0200#0200#1	????	inspection_results	??????	pepsinogen	??????2	pepsinogen_2	setup	2018-10-29 07:24:26.883794	setup	2018-10-29 07:24:26.883794
+1001#4701#1360005000132	rate_1_2	??????1/2?	N	health	0200#0200#1	????	inspection_results	??????	pepsinogen	??????1/2?	rate_1_2	setup	2018-10-29 07:24:26.895644	setup	2018-10-29 07:24:26.895644
+1001#4701#1360005000132	beta_lipo_protein	á????	N	health	0200#0200#1	????	inspection_results	á????	beta_lipo_protein	á????	beta_lipo_protein	setup	2018-10-29 07:24:26.905981	setup	2018-10-29 07:24:26.905981
+1001#4701#1360005000132	remnant	?????	N	health	0200#0200#1	????	inspection_results	?????	remnant	?????	remnant	setup	2018-10-29 07:24:26.916533	setup	2018-10-29 07:24:26.916533
+1001#4701#1360005000132	intrinsic_factor_reml_c	???RemL-c	N	health	0200#0200#1	????	inspection_results	???RemL-c	intrinsic_factor_reml_c	???RemL-c	intrinsic_factor_reml_c	setup	2018-10-29 07:24:26.93005	setup	2018-10-29 07:24:26.93005
+1001#4701#1360005000132	external_factor_reml_c	???RemL-c	N	health	0200#0200#1	????	inspection_results	???RemL-c	external_factor_reml_c	???RemL-c	external_factor_reml_c	setup	2018-10-29 07:24:26.939687	setup	2018-10-29 07:24:26.939687
+1001#4701#1360005000132	2_5_hexanedione	??2.5????????	N	health	0200#0200#1	????	inspection_results	??2.5???????	2_5_hexanedione	??2.5???????	2_5_hexanedione	setup	2018-10-29 07:24:26.947988	setup	2018-10-29 07:24:26.947988
+1001#4701#1360005000132	hippuric_acid	?????	N	health	0200#0200#1	????	inspection_results	?????	hippuric_acid	?????	hippuric_acid	setup	2018-10-29 07:24:26.962057	setup	2018-10-29 07:24:26.962057
+1001#4701#1360005000132	methyl_hippuric_acid	????????	N	health	0200#0200#1	????	inspection_results	????????	methyl_hippuric_acid	????????	methyl_hippuric_acid	setup	2018-10-29 07:24:26.972971	setup	2018-10-29 07:24:26.972971
+1001#4701#1360005000132	delta_aminolevulinic_acid	??ë?????????	N	health	0200#0200#1	????	inspection_results	??ë????????	delta_aminolevulinic_acid	??ë????????	delta_aminolevulinic_acid	setup	2018-10-29 07:24:26.984008	setup	2018-10-29 07:24:26.984008
+1001#4701#1360005000132	hydrogen_cyanide	??????	N	health	0200#0200#1	????	inspection_results	??????	hydrogen_cyanide	??????	hydrogen_cyanide	setup	2018-10-29 07:24:26.995259	setup	2018-10-29 07:24:26.995259
+1001#4701#1360005000132	methyl_bromide	?????	N	health	0200#0200#1	????	inspection_results	?????	methyl_bromide	?????	methyl_bromide	setup	2018-10-29 07:24:27.005736	setup	2018-10-29 07:24:27.005736
+1001#4701#1360005000132	lead	?	N	health	0200#0200#1	????	inspection_results	?	lead	?	lead	setup	2018-10-29 07:24:27.015715	setup	2018-10-29 07:24:27.015715
+1001#4701#1360005000132	alpha_fetoprotein_quantitative	à??????	N	health	0200#0200#1	????	inspection_results	à-?????	alpha_fetoprotein_quantitative	à-?????	alpha_fetoprotein_quantitative	setup	2018-10-29 07:24:27.028544	setup	2018-10-29 07:24:27.028544
+1001#4701#1360005000132	cea	CEA(???)	N	health	0200#0200#1	????	inspection_results	CEA(???)	cea	CEA(???)	cea	setup	2018-10-29 07:24:27.039713	setup	2018-10-29 07:24:27.039713
+1001#4701#1360005000132	ige	IgE	N	health	0200#0200#1	????	inspection_results	IgE	ige	IgE	ige	setup	2018-10-29 07:24:27.049308	setup	2018-10-29 07:24:27.049308
+1001#4701#1360005000132	norovirus	??????	N	health	0200#0200#1	????	inspection_results	??????	norovirus	??????	norovirus	setup	2018-10-29 07:24:27.060629	setup	2018-10-29 07:24:27.060629
+1001#4701#1360005000132	microalbumin	?????????	N	health	0200#0200#1	????	inspection_results	???	urinalysis	?????????	microalbumin	setup	2018-10-29 07:24:27.071529	setup	2018-10-29 07:24:27.071529
+1001#4701#1360005000132	urinary_sugar	??	N	health	0200#0200#1	????	inspection_results	???	urinalysis	??	urinary_sugar	setup	2018-10-29 07:24:27.082558	setup	2018-10-29 07:24:27.082558
+1001#4701#1360005000132	urinary_protein	???	N	health	0200#0200#1	????	inspection_results	???	urinalysis	???	urinary_protein	setup	2018-10-29 07:24:27.094204	setup	2018-10-29 07:24:27.094204
+1001#4701#1360005000132	uric_blood	???	N	health	0200#0200#1	????	inspection_results	???	urinalysis	???	uric_blood	setup	2018-10-29 07:24:27.104497	setup	2018-10-29 07:24:27.104497
+1001#4701#1360005000132	urine_flow_rate	???	N	health	0200#0200#1	????	inspection_results	???	urinalysis	???	urine_flow_rate	setup	2018-10-29 07:24:27.111794	setup	2018-10-29 07:24:27.111794
+1001#4701#1360005000132	red_blood_cells	???	N	health	0200#0200#1	????	inspection_results	???	red_blood_cells	???	red_blood_cells	setup	2018-10-29 07:24:27.118974	setup	2018-10-29 07:24:27.118974
+1001#4701#1360005000132	white_blood_cells	???	N	health	0200#0200#1	????	inspection_results	???	white_blood_cells	???	white_blood_cells	setup	2018-10-29 07:24:27.130062	setup	2018-10-29 07:24:27.130062
+1001#4701#1360005000132	squamous_epithelium	????	N	health	0200#0200#1	????	inspection_results	????	squamous_epithelium	????	squamous_epithelium	setup	2018-10-29 07:24:27.138497	setup	2018-10-29 07:24:27.138497
+1001#4701#1360005000132	hyaline_cast	?????	N	health	0200#0200#1	????	inspection_results	?????	hyaline_cast	?????	hyaline_cast	setup	2018-10-29 07:24:27.14803	setup	2018-10-29 07:24:27.14803
+1001#4701#1360005000132	transitional_epithelium	????	N	health	0200#0200#1	????	inspection_results	????	transitional_epithelium	????	transitional_epithelium	setup	2018-10-29 07:24:27.160957	setup	2018-10-29 07:24:27.160957
+1001#4701#1360005000132	oxalate_ca	????Ca	N	health	0200#0200#1	????	inspection_results	????Ca	oxalate_ca	????Ca	oxalate_ca	setup	2018-10-29 07:24:27.16975	setup	2018-10-29 07:24:27.16975
+1001#4701#1360005000132	mucous_thread	???	N	health	0200#0200#1	????	inspection_results	???	mucous_thread	???	mucous_thread	setup	2018-10-29 07:24:27.180849	setup	2018-10-29 07:24:27.180849
+1001#4701#1360005000132	bacterium	??	N	health	0200#0200#1	????	inspection_results	??	bacterium	??	bacterium	setup	2018-10-29 07:24:27.195121	setup	2018-10-29 07:24:27.195121
+1001#4701#1360005000132	small_cast	???	N	health	0200#0200#1	????	inspection_results	???	small_cast	???	small_cast	setup	2018-10-29 07:24:27.206735	setup	2018-10-29 07:24:27.206735
+1001#4701#1360005000132	epithelial_cells	????	N	health	0200#0200#1	????	inspection_results	????	epithelial_cells	????	epithelial_cells	setup	2018-10-29 07:24:27.213705	setup	2018-10-29 07:24:27.213705
+1001#4701#1360005000132	cast	??	N	health	0200#0200#1	????	inspection_results	??	cast	??	cast	setup	2018-10-29 07:24:27.226792	setup	2018-10-29 07:24:27.226792
+1001#4701#1360005000132	amorphous_urate	??????	N	health	0200#0200#1	????	inspection_results	??????	amorphous_urate	??????	amorphous_urate	setup	2018-10-29 07:24:27.238922	setup	2018-10-29 07:24:27.238922
+1001#4701#1360005000132	amorphous_phosphoric_acid	??????	N	health	0200#0200#1	????	inspection_results	??????	amorphous_phosphoric_acid	??????	amorphous_phosphoric_acid	setup	2018-10-29 07:24:27.245515	setup	2018-10-29 07:24:27.245515
+1001#4701#1360005000132	bright_cell	???	N	health	0200#0200#1	????	inspection_results	???	bright_cell	???	bright_cell	setup	2018-10-29 07:24:27.251335	setup	2018-10-29 07:24:27.251335
+1001#4701#1360005000132	inclusion_body_cells	?????	N	health	0200#0200#1	????	inspection_results	?????	inclusion_body_cells	?????	inclusion_body_cells	setup	2018-10-29 07:24:27.260981	setup	2018-10-29 07:24:27.260981
+1001#4701#1360005000132	yeast_like_fungus	?????	N	health	0200#0200#1	????	inspection_results	?????	yeast_like_fungus	?????	yeast_like_fungus	setup	2018-10-29 07:24:27.28115	setup	2018-10-29 07:24:27.28115
+1001#4701#1360005000132	uric_acid_crystals	????	N	health	0200#0200#1	????	inspection_results	????	uric_acid_crystals	????	uric_acid_crystals	setup	2018-10-29 07:24:27.287512	setup	2018-10-29 07:24:27.287512
+1001#4701#1360005000132	phosphate_ca_crystal	???Ca??	N	health	0200#0200#1	????	inspection_results	???Ca??	phosphate_ca_crystal	???Ca??	phosphate_ca_crystal	setup	2018-10-29 07:24:27.294814	setup	2018-10-29 07:24:27.294814
+1001#4701#1360005000132	granular_cast	????	N	health	0200#0200#1	????	inspection_results	????	granular_cast	????	granular_cast	setup	2018-10-29 07:24:27.304499	setup	2018-10-29 07:24:27.304499
+1001#4701#1360005000132	waxy_cast	?????	N	health	0200#0200#1	????	inspection_results	?????	waxy_cast	?????	waxy_cast	setup	2018-10-29 07:24:27.314249	setup	2018-10-29 07:24:27.314249
+1001#4701#1360005000132	red_blood_cell_cast	?????	N	health	0200#0200#1	????	inspection_results	?????	red_blood_cell_cast	?????	red_blood_cell_cast	setup	2018-10-29 07:24:27.326953	setup	2018-10-29 07:24:27.326953
+1001#4701#1360005000132	white_blood_cell_cast	?????	N	health	0200#0200#1	????	inspection_results	?????	white_blood_cell_cast	?????	white_blood_cell_cast	setup	2018-10-29 07:24:27.336642	setup	2018-10-29 07:24:27.336642
+1001#4701#1360005000132	epithelial_cast	????	N	health	0200#0200#1	????	inspection_results	????	epithelial_cast	????	epithelial_cast	setup	2018-10-29 07:24:27.347817	setup	2018-10-29 07:24:27.347817
+1001#4701#1360005000132	fatty_cast	????	N	health	0200#0200#1	????	inspection_results	????	fatty_cast	????	fatty_cast	setup	2018-10-29 07:24:27.360221	setup	2018-10-29 07:24:27.360221
+1001#4701#1360005000132	oval_fat_body	??????	N	health	0200#0200#1	????	inspection_results	??????	oval_fat_body	??????	oval_fat_body	setup	2018-10-29 07:24:27.369419	setup	2018-10-29 07:24:27.369419
+1001#4701#1360005000132	ammonium_phosphate_mg	?????????Mg	N	health	0200#0200#1	????	inspection_results	?????????Mg	ammonium_phosphate_mg	?????????Mg	ammonium_phosphate_mg	setup	2018-10-29 07:24:27.380779	setup	2018-10-29 07:24:27.380779
+1001#4701#1360005000132	ammonium_urate	????????	N	health	0200#0200#1	????	inspection_results	????????	ammonium_urate	????????	ammonium_urate	setup	2018-10-29 07:24:27.393236	setup	2018-10-29 07:24:27.393236
+1001#4701#1360005000132	bilirubin_crystals	???????	N	health	0200#0200#1	????	inspection_results	???????	bilirubin_crystals	???????	bilirubin_crystals	setup	2018-10-29 07:24:27.403057	setup	2018-10-29 07:24:27.403057
+1001#4701#1360005000132	cystine_crystals	??????	N	health	0200#0200#1	????	inspection_results	??????	cystine_crystals	??????	cystine_crystals	setup	2018-10-29 07:24:27.414295	setup	2018-10-29 07:24:27.414295
+1001#4701#1360005000132	cholesterol_crystals	?????????	N	health	0200#0200#1	????	inspection_results	?????????	cholesterol_crystals	?????????	cholesterol_crystals	setup	2018-10-29 07:24:27.427297	setup	2018-10-29 07:24:27.427297
+1001#4701#1360005000132	fat_globule	???	N	health	0200#0200#1	????	inspection_results	???	fat_globule	???	fat_globule	setup	2018-10-29 07:24:27.436233	setup	2018-10-29 07:24:27.436233
+1001#4701#1360005000132	trichomonas	??????	N	health	0200#0200#1	????	inspection_results	??????	trichomonas	??????	trichomonas	setup	2018-10-29 07:24:27.446468	setup	2018-10-29 07:24:27.446468
+1001#4701#1360005000132	transitional_cells	???????	N	health	0200#0200#1	????	inspection_results	???????	transitional_cells	???????	transitional_cells	setup	2018-10-29 07:24:27.460943	setup	2018-10-29 07:24:27.460943
+1001#4701#1360005000132	sperm	??	N	health	0200#0200#1	????	inspection_results	??	sperm	??	sperm	setup	2018-10-29 07:24:27.467871	setup	2018-10-29 07:24:27.467871
+1001#4701#1360005000132	renal_tubular_epithelial_cell	????????	N	health	0200#0200#1	????	inspection_results	????????	renal_tubular_epithelial_cell	????????	renal_tubular_epithelial_cell	setup	2018-10-29 07:24:27.480859	setup	2018-10-29 07:24:27.480859
+1001#4701#1360005000132	dysmorphic_rbc	?????	N	health	0200#0200#1	????	inspection_results	?????	dysmorphic_rbc	?????	dysmorphic_rbc	setup	2018-10-29 07:24:27.493666	setup	2018-10-29 07:24:27.493666
+1001#4701#1360005000132	blanket_degenerate_cast	??????	N	health	0200#0200#1	????	inspection_results	??????	blanket_degenerate_cast	??????	blanket_degenerate_cast	setup	2018-10-29 07:24:27.502228	setup	2018-10-29 07:24:27.502228
+1001#4701#1360005000132	hemosiderin_cast	????????	N	health	0200#0200#1	????	inspection_results	????????	hemosiderin_cast	????????	hemosiderin_cast	setup	2018-10-29 07:24:27.513435	setup	2018-10-29 07:24:27.513435
+1001#4701#1360005000132	myoglobin_cast	????????	N	health	0200#0200#1	????	inspection_results	????????	myoglobin_cast	????????	myoglobin_cast	setup	2018-10-29 07:24:27.526431	setup	2018-10-29 07:24:27.526431
+1001#4701#1360005000132	salt_crystal_cast	??ú????	N	health	0200#0200#1	????	inspection_results	??ú????	salt_crystal_cast	??ú????	salt_crystal_cast	setup	2018-10-29 07:24:27.535564	setup	2018-10-29 07:24:27.535564
+1001#4701#1360005000132	wide_cast	????	N	health	0200#0200#1	????	inspection_results	????	wide_cast	????	wide_cast	setup	2018-10-29 07:24:27.546305	setup	2018-10-29 07:24:27.546305
+1001#4701#1360005000132	2_8_dha_crystal	2.8?????????????(DHA)??	N	health	0200#0200#1	????	inspection_results	2.8??????????(DHA)??	2_8_dha_crystal	2.8??????????(DHA)??	2_8_dha_crystal	setup	2018-10-29 07:24:27.56274	setup	2018-10-29 07:24:27.56274
+1001#4701#1360005000132	columnar_epithelial_cells	??????	N	health	0200#0200#1	????	inspection_results	??????	columnar_epithelial_cells	??????	columnar_epithelial_cells	setup	2018-10-29 07:24:27.57407	setup	2018-10-29 07:24:27.57407
+1001#4701#1360005000132	stercoral_strongyloides	???	N	health	0200#0200#1	????	inspection_results	???	stercoral_strongyloides	???	stercoral_strongyloides	setup	2018-10-29 07:24:27.582299	setup	2018-10-29 07:24:27.582299
+1001#4701#1360005000132	pinworm_eggs	???	N	health	0200#0200#1	????	inspection_results	???	pinworm_eggs	???	pinworm_eggs	setup	2018-10-29 07:24:27.59374	setup	2018-10-29 07:24:27.59374
+1001#4701#1360005000132	idioblast	????	N	health	0200#0200#1	????	inspection_results	????	idioblast	????	idioblast	setup	2018-10-29 07:24:27.605367	setup	2018-10-29 07:24:27.605367
+1001#4701#1360005000132	hematocrit	????????	N	health	0200#0200#1	????	inspection_results	????????	hematocrit	????????	hematocrit	setup	2018-10-29 07:24:27.615125	setup	2018-10-29 07:24:27.615125
+1001#4701#1360005000132	hemoglobin	????[???????]	N	health	0200#0200#1	????	blood_test_results	????(???????)	hemoglobin	????(???????)	hemoglobin	setup	2018-10-29 07:24:27.628397	setup	2018-10-29 07:24:27.628397
+1001#4701#1360005000132	red_blood_count	????	N	health	0200#0200#1	????	blood_test_results	????	red_blood_count	????	red_blood_count	setup	2018-10-29 07:24:27.636691	setup	2018-10-29 07:24:27.636691
+1001#4701#1360005000132	mcv	MCV	N	health	0200#0200#1	????	blood_test_results	MCV	mcv	MCV	mcv	setup	2018-10-29 07:24:27.646035	setup	2018-10-29 07:24:27.646035
+1001#4701#1360005000132	mch	MCH	N	health	0200#0200#1	????	blood_test_results	MCH	mch	MCH	mch	setup	2018-10-29 07:24:27.660873	setup	2018-10-29 07:24:27.660873
+1001#4701#1360005000132	mchc	MCHC	N	health	0200#0200#1	????	blood_test_results	MCHC	mchc	MCHC	mchc	setup	2018-10-29 07:24:27.67109	setup	2018-10-29 07:24:27.67109
+1001#4701#1360005000132	white_blood_count	????	N	health	0200#0200#1	????	blood_test_results	????	white_blood_count	????	white_blood_count	setup	2018-10-29 07:24:27.681309	setup	2018-10-29 07:24:27.681309
+1001#4701#1360005000132	platelet_count	????	N	health	0200#0200#1	????	blood_test_results	????	platelet_count	????	platelet_count	setup	2018-10-29 07:24:27.695447	setup	2018-10-29 07:24:27.695447
+1001#4701#1360005000132	basophil	????	N	health	0200#0200#1	????	blood_test_results	????	basophil	????	basophil	setup	2018-10-29 07:24:27.705406	setup	2018-10-29 07:24:27.705406
+1001#4701#1360005000132	eosinophils	???	N	health	0200#0200#1	????	blood_test_results	???	eosinophils	???	eosinophils	setup	2018-10-29 07:24:27.715228	setup	2018-10-29 07:24:27.715228
+1001#4701#1360005000132	neutrophils	???	N	health	0200#0200#1	????	blood_test_results	???	neutrophils	???	neutrophils	setup	2018-10-29 07:24:27.727116	setup	2018-10-29 07:24:27.727116
+1001#4701#1360005000132	lymphocyte	????	N	health	0200#0200#1	????	blood_test_results	????	lymphocyte	????	lymphocyte	setup	2018-10-29 07:24:27.736188	setup	2018-10-29 07:24:27.736188
+1001#4701#1360005000132	monocyte	??	N	health	0200#0200#1	????	blood_test_results	??	monocyte	??	monocyte	setup	2018-10-29 07:24:27.745578	setup	2018-10-29 07:24:27.745578
+1001#4701#1360005000132	seg	seg	N	health	0200#0200#1	????	blood_test_results	seg	seg	seg	seg	setup	2018-10-29 07:24:27.760923	setup	2018-10-29 07:24:27.760923
+1001#4701#1360005000132	stab	stab	N	health	0200#0200#1	????	blood_test_results	stab	stab	stab	stab	setup	2018-10-29 07:24:27.769631	setup	2018-10-29 07:24:27.769631
+1001#4701#1360005000132	pro_my	Pro-My	N	health	0200#0200#1	????	blood_test_results	Pro-My	pro_my	Pro-My	pro_my	setup	2018-10-29 07:24:27.781576	setup	2018-10-29 07:24:27.781576
+1001#4701#1360005000132	myelo	Myelo	N	health	0200#0200#1	????	blood_test_results	Myelo	myelo	Myelo	myelo	setup	2018-10-29 07:24:27.794202	setup	2018-10-29 07:24:27.794202
+1001#4701#1360005000132	meta	Meta	N	health	0200#0200#1	????	blood_test_results	Meta	meta	Meta	meta	setup	2018-10-29 07:24:27.802924	setup	2018-10-29 07:24:27.802924
+1001#4701#1360005000132	erythro	Erythro	N	health	0200#0200#1	????	blood_test_results	Erythro	erythro	Erythro	erythro	setup	2018-10-29 07:24:27.815452	setup	2018-10-29 07:24:27.815452
+1001#4701#1360005000132	atypical_lymphocyte	??????	N	health	0200#0200#1	????	blood_test_results	??????	atypical_lymphocyte	??????	atypical_lymphocyte	setup	2018-10-29 07:24:27.824413	setup	2018-10-29 07:24:27.824413
+1001#4701#1360005000132	isomer_atypical_lymphocyte	??????(???)	N	health	0200#0200#1	????	blood_test_results	??????(???)	isomer_atypical_lymphocyte	??????(???)	isomer_atypical_lymphocyte	setup	2018-10-29 07:24:27.834273	setup	2018-10-29 07:24:27.834273
+1001#4701#1360005000132	alt_like_cells	ALT???	N	health	0200#0200#1	????	blood_test_results	ALT???	alt_like_cells	ALT???	alt_like_cells	setup	2018-10-29 07:24:27.848155	setup	2018-10-29 07:24:27.848155
+1001#4701#1360005000132	classification_unknown_cells	??????	N	health	0200#0200#1	????	blood_test_results	??????	classification_unknown_cells	??????	classification_unknown_cells	setup	2018-10-29 07:24:27.860204	setup	2018-10-29 07:24:27.860204
+1001#4701#1360005000132	abnormal_cell	????	N	health	0200#0200#1	????	blood_test_results	????	abnormal_cell	????	abnormal_cell	setup	2018-10-29 07:24:27.868703	setup	2018-10-29 07:24:27.868703
+1001#4701#1360005000132	blastoid	?????	N	health	0200#0200#1	????	blood_test_results	?????	blastoid	?????	blastoid	setup	2018-10-29 07:24:27.877554	setup	2018-10-29 07:24:27.877554
+1001#4701#1360005000132	appear_juvenile_cell	?????????	N	health	0200#0200#1	????	blood_test_results	?????????	appear_juvenile_cell	?????????	appear_juvenile_cell	setup	2018-10-29 07:24:27.887936	setup	2018-10-29 07:24:27.887936
+1001#4701#1360005000132	toxic_granule	????	N	health	0200#0200#1	????	blood_test_results	????	toxic_granule	????	toxic_granule	setup	2018-10-29 07:24:27.897439	setup	2018-10-29 07:24:27.897439
+1001#4701#1360005000132	red_blood_cell_morphology	?????	N	health	0200#0200#1	????	blood_test_results	?????	red_blood_cell_morphology	?????	red_blood_cell_morphology	setup	2018-10-29 07:24:27.91456	setup	2018-10-29 07:24:27.91456
+1001#4701#1360005000132	anisocytosis	???????	N	health	0200#0200#1	????	blood_test_results	???????	anisocytosis	???????	anisocytosis	setup	2018-10-29 07:24:27.928119	setup	2018-10-29 07:24:27.928119
+1001#4701#1360005000132	big_red_blood_cell	?????	N	health	0200#0200#1	????	blood_test_results	?????	big_red_blood_cell	?????	big_red_blood_cell	setup	2018-10-29 07:24:27.937766	setup	2018-10-29 07:24:27.937766
+1001#4701#1360005000132	leptocyte	?????	N	health	0200#0200#1	????	blood_test_results	?????	leptocyte	?????	leptocyte	setup	2018-10-29 07:24:27.946134	setup	2018-10-29 07:24:27.946134
+1001#4701#1360005000132	poikilocyte	?????	N	health	0200#0200#1	????	blood_test_results	?????	poikilocyte	?????	poikilocyte	setup	2018-10-29 07:24:27.961194	setup	2018-10-29 07:24:27.961194
+1001#4701#1360005000132	target_cell	?????	N	health	0200#0200#1	????	blood_test_results	?????	target_cell	?????	target_cell	setup	2018-10-29 07:24:27.970747	setup	2018-10-29 07:24:27.970747
+1001#4701#1360005000132	blood_sedimentation_1_hour	??1??	N	health	0200#0200#1	????	blood_test_results	??	blood_sedimentation	??1??	blood_sedimentation_1_hour	setup	2018-10-29 07:24:27.980161	setup	2018-10-29 07:24:27.980161
+1001#4701#1360005000132	blood_sedimentation_2_hour	??2??	N	health	0200#0200#1	????	blood_test_results	??	blood_sedimentation	??2??	blood_sedimentation_2_hour	setup	2018-10-29 07:24:27.991912	setup	2018-10-29 07:24:27.991912
+1001#4701#1360005000132	human_hemoglobin_1_day	????1??	N	health	0200#0200#1	????	blood_test_results	????????	human_hemoglobin	????1??	human_hemoglobin_1_day	setup	2018-10-29 07:24:28.000337	setup	2018-10-29 07:24:28.000337
+1001#4701#1360005000132	human_hemoglobin_2_day	????2??	N	health	0200#0200#1	????	blood_test_results	????????	human_hemoglobin	????2??	human_hemoglobin_2_day	setup	2018-10-29 07:24:28.013646	setup	2018-10-29 07:24:28.013646
+1001#4701#1360005000132	rectal_examination	???	N	health	0200#0200#1	????	blood_test_results	???	rectal_examination	???	rectal_examination	setup	2018-10-29 07:24:28.023925	setup	2018-10-29 07:24:28.023925
+1001#4701#1360005000132	culture _stercoral_strongyloides	?????	N	health	0200#0200#1	????	blood_test_results	?????	culture _stercoral_strongyloides	?????	culture _stercoral_strongyloides	setup	2018-10-29 07:24:28.03583	setup	2018-10-29 07:24:28.03583
+1001#4701#1360005000132	parasite_eggs_concentration_technique	??(???)	N	health	0200#0200#1	????	blood_test_results	??(???)	parasite_eggs_concentration_technique	??(???)	parasite_eggs_concentration_technique	setup	2018-10-29 07:24:28.047782	setup	2018-10-29 07:24:28.047782
+1001#4701#1360005000132	parasite_eggs_direct_smear	??????	N	health	0200#0200#1	????	blood_test_results	??????	parasite_eggs_direct_smear	??????	parasite_eggs_direct_smear	setup	2018-10-29 07:24:28.057672	setup	2018-10-29 07:24:28.057672
+1001#4701#1360005000132	dysentery	??	N	health	0200#0200#1	????	blood_test_results	??	dysentery	??	dysentery	setup	2018-10-29 07:24:28.067691	setup	2018-10-29 07:24:28.067691
+1001#4701#1360005000132	salmonella	?????	N	health	0200#0200#1	????	blood_test_results	?????	salmonella	?????	salmonella	setup	2018-10-29 07:24:28.079854	setup	2018-10-29 07:24:28.079854
+1001#4701#1360005000132	o_157	O-157	N	health	0200#0200#1	????	blood_test_results	O-157	o_157	O-157	o_157	setup	2018-10-29 07:24:28.089821	setup	2018-10-29 07:24:28.089821
+1001#4701#1360005000132	typhoid_fever	????	N	health	0200#0200#1	????	blood_test_results	????	typhoid_fever	????	typhoid_fever	setup	2018-10-29 07:24:28.101282	setup	2018-10-29 07:24:28.101282
+1001#4701#1360005000132	paratyphoid_fever	?????	N	health	0200#0200#1	????	blood_test_results	?????	paratyphoid_fever	?????	paratyphoid_fever	setup	2018-10-29 07:24:28.112808	setup	2018-10-29 07:24:28.112808
+1001#4701#1360005000132	vibrio_parahaemolyticus	???????	N	health	0200#0200#1	????	blood_test_results	???????	vibrio_parahaemolyticus	???????	vibrio_parahaemolyticus	setup	2018-10-29 07:24:28.123764	setup	2018-10-29 07:24:28.123764
+1001#4701#1360005000132	welch_bacillus	?????	N	health	0200#0200#1	????	blood_test_results	?????	welch_bacillus	?????	welch_bacillus	setup	2018-10-29 07:24:28.134609	setup	2018-10-29 07:24:28.134609
+1001#4701#1360005000132	amount_1_sec	?????(1??)	N	health	0200#0200#1	????	inspection_results	???	pulmonary_function	?????(1??)	amount_1_sec	setup	2018-10-29 07:24:28.145296	setup	2018-10-29 07:24:28.145296
+1001#4701#1360005000132	electro_cardiogram_findings	???(??)5	N	health	0200#0200#1	????	blood_test_results	?????	electro_cardiogram_findings	?????	electro_cardiogram_findings	setup	2018-10-29 07:24:28.156974	setup	2018-10-29 07:24:28.156974
+1001#4701#1360005000132	chest_xray_direct_findings	??X???(??:????)??5	N	health	0200#0200#1	??	findings	??X???(??:????)??	chest_xray_direct_findings	??X???(??:????)??	chest_xray_direct_findings	setup	2018-10-29 07:24:28.166896	setup	2018-10-29 07:24:28.166896
+1001#4701#1360005000132	chest_xray_indirect_findings	??X???(??:????)??5	N	health	0200#0200#1	??	findings	??X???(??:????)??	chest_xray_indirect_findings	??X???(??:????)??	chest_xray_indirect_findings	setup	2018-10-29 07:24:28.175598	setup	2018-10-29 07:24:28.175598
+1001#4701#1360005000132	sputum_examination_smear_microscopy_findings	???? (???? ????)??5	N	health	0200#0200#1	??	findings	???? (????:????)??	sputum_examination_smear_microscopy_findings	???? (????:????)??	sputum_examination_smear_microscopy_findings	setup	2018-10-29 07:24:28.191079	setup	2018-10-29 07:24:28.191079
+1001#4701#1360005000132	upper_gastrointestinal_xray_direct_findings	?????X?(????)??5	N	health	0200#0200#1	??	findings	?????X?(????)??	upper_gastrointestinal_xray_direct_findings	?????X?(????)??	upper_gastrointestinal_xray_direct_findings	setup	2018-10-29 07:24:28.203907	setup	2018-10-29 07:24:28.203907
+1001#4701#1360005000132	upper_gastrointestinal_xray_indirect_findings	?????X?(????)??5	N	health	0200#0200#1	??	findings	?????X?(????)??	upper_gastrointestinal_xray_indirect_findings	?????X?(????)??	upper_gastrointestinal_xray_indirect_findings	setup	2018-10-29 07:24:28.213166	setup	2018-10-29 07:24:28.213166
+1001#4701#1360005000132	upper_gastrointestinal_endoscope_findings	??????????(??)2	N	health	0200#0200#1	??	findings	??????????(??)	upper_gastrointestinal_endoscope_findings	??????????(??)	upper_gastrointestinal_endoscope_findings	setup	2018-10-29 07:24:28.22348	setup	2018-10-29 07:24:28.22348
+1001#4701#1360005000132	ultrasound_abdominal	?????(??)5	N	health	0200#0200#1	??	findings	?????(??)	ultrasound_abdominal	?????(??)	ultrasound_abdominal	setup	2018-10-29 07:24:28.233214	setup	2018-10-29 07:24:28.233214
+1001#4701#1360005000132	ultrasound_cardiac	?????(??)5	N	health	0200#0200#1	??	findings	?????(??)	ultrasound_cardiac	?????(??)	ultrasound_cardiac	setup	2018-10-29 07:24:28.244753	setup	2018-10-29 07:24:28.244753
+1001#4701#1360005000132	findings	??????(??)5	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??????(??)	findings	setup	2018-10-29 07:24:28.256264	setup	2018-10-29 07:24:28.256264
+1001#4701#1360005000132	exist_plaque	??????	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??????	exist_plaque	setup	2018-10-29 07:24:28.266375	setup	2018-10-29 07:24:28.266375
+1001#4701#1360005000132	max_imt_right	??IMT?	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??IMT?	max_imt_right	setup	2018-10-29 07:24:28.278804	setup	2018-10-29 07:24:28.278804
+1001#4701#1360005000132	max_imt_left	??IMT?	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??IMT?	max_imt_left	setup	2018-10-29 07:24:28.318229	setup	2018-10-29 07:24:28.318229
+1001#4701#1360005000132	average_imt_right	??IMT?	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??IMT?	average_imt_right	setup	2018-10-29 07:24:28.344393	setup	2018-10-29 07:24:28.344393
+1001#4701#1360005000132	average_imt_left	??IMT?	N	health	0200#0200#1	????	inspection_results	??????	carotid_duplex	??IMT?	average_imt_left	setup	2018-10-29 07:24:28.35628	setup	2018-10-29 07:24:28.35628
+1001#4701#1360005000132	mamma_palpation_findings	?????(??)5	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	?????(??)	mamma_palpation_findings	setup	2018-10-29 07:24:28.368821	setup	2018-10-29 07:24:28.368821
+1001#4701#1360005000132	mammography_findings	??????(????????)(??)	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	??????(????????)(??)	mammography_findings	setup	2018-10-29 07:24:28.378087	setup	2018-10-29 07:24:28.378087
+1001#4701#1360005000132	left_500	???500Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???500Hz	left_500	setup	2018-10-29 07:24:28.386723	setup	2018-10-29 07:24:28.386723
+1001#4701#1360005000132	mammography_category	???????	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	???????	mammography_category	setup	2018-10-29 07:24:28.412271	setup	2018-10-29 07:24:28.412271
+1001#4701#1360005000132	mamma_ultrasound_findings	???????(??)4	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	???????(??)	mamma_ultrasound_findings	setup	2018-10-29 07:24:28.424275	setup	2018-10-29 07:24:28.424275
+1001#4701#1360005000132	cervix_uteri_inspection_findings	??????(??)	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	??????(??)	cervix_uteri_inspection_findings	setup	2018-10-29 07:24:28.43379	setup	2018-10-29 07:24:28.43379
+1001#4701#1360005000132	intrauterine_diagnosis_findings	????(??)	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	????(??)	intrauterine_diagnosis_findings	setup	2018-10-29 07:24:28.445615	setup	2018-10-29 07:24:28.445615
+1001#4701#1360005000132	uterine_disease_findings	????(??)	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	????(??)	uterine_disease_findings	setup	2018-10-29 07:24:28.457309	setup	2018-10-29 07:24:28.457309
+1001#4701#1360005000132	cervix_uteri_cytodiagnosis	???????	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	???????	cervix_uteri_cytodiagnosis	setup	2018-10-29 07:24:28.467202	setup	2018-10-29 07:24:28.467202
+1001#4701#1360005000132	cervix_uteri_bethesda	????(????)	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	????(????)	cervix_uteri_bethesda	setup	2018-10-29 07:24:28.478367	setup	2018-10-29 07:24:28.478367
+1001#4701#1360005000132	corpus_uteri_cytodiagnosis	???????	N	health	0200#0200#1	????	inspection_results	?????	gynecological_exam	???????	corpus_uteri_cytodiagnosis	setup	2018-10-29 07:24:28.490346	setup	2018-10-29 07:24:28.490346
+1001#4701#1360005000132	forced_vital_capacity	?????(?????)	N	health	0200#0200#1	????	inspection_results	???	pulmonary_function	?????(?????)	forced_vital_capacity	setup	2018-10-29 07:24:28.50134	setup	2018-10-29 07:24:28.50134
+1001#4701#1360005000132	predicted_vital_capacity	?????	N	health	0200#0200#1	????	inspection_results	???	pulmonary_function	?????	predicted_vital_capacity	setup	2018-10-29 07:24:28.512296	setup	2018-10-29 07:24:28.512296
+1001#4701#1360005000132	rate_1_sec	?????(1??)	N	health	0200#0200#1	????	inspection_results	???	pulmonary_function	?????(1??)	rate_1_sec	setup	2018-10-29 07:24:28.523164	setup	2018-10-29 07:24:28.523164
+1001#4701#1360005000132	percent_vital_capacity	?????(%VC)	N	health	0200#0200#1	????	inspection_results	???	pulmonary_function	?????(%VC)	percent_vital_capacity	setup	2018-10-29 07:24:28.534347	setup	2018-10-29 07:24:28.534347
+1001#4701#1360005000132	eyesight_right	??(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??(?)	eyesight_right	setup	2018-10-29 07:24:28.545016	setup	2018-10-29 07:24:28.545016
+1001#4701#1360005000132	eyesight_left	??(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??(?)	eyesight_left	setup	2018-10-29 07:24:28.555546	setup	2018-10-29 07:24:28.555546
+1001#4701#1360005000132	right_corrected	??(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??(?:??)	right_corrected	setup	2018-10-29 07:24:28.566554	setup	2018-10-29 07:24:28.566554
+1001#4701#1360005000132	left_corrected	??(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??(?:??)	left_corrected	setup	2018-10-29 07:24:28.579806	setup	2018-10-29 07:24:28.579806
+1001#4701#1360005000132	eyesight_right_33	??33cm(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??33cm(?)	eyesight_right_33	setup	2018-10-29 07:24:28.589596	setup	2018-10-29 07:24:28.589596
+1001#4701#1360005000132	eyesight_left_33	??33cm(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??33cm(?)	eyesight_left_33	setup	2018-10-29 07:24:28.598769	setup	2018-10-29 07:24:28.598769
+1001#4701#1360005000132	eyesight_right_33_corrected	??33cm(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??33cm(?:??)	eyesight_right_33_corrected	setup	2018-10-29 07:24:28.611484	setup	2018-10-29 07:24:28.611484
+1001#4701#1360005000132	eyesight_left_33_corrected	??33cm(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??33cm(?:??)	eyesight_left_33_corrected	setup	2018-10-29 07:24:28.623513	setup	2018-10-29 07:24:28.623513
+1001#4701#1360005000132	eyesight_right_50	??50cm(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??50cm(?)	eyesight_right_50	setup	2018-10-29 07:24:28.633814	setup	2018-10-29 07:24:28.633814
+1001#4701#1360005000132	eyesight_left_50	??50cm(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??50cm(?)	eyesight_left_50	setup	2018-10-29 07:24:28.644434	setup	2018-10-29 07:24:28.644434
+1001#4701#1360005000132	eyesight_right_50_corrected	??50cm(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??50cm(?:??)	eyesight_right_50_corrected	setup	2018-10-29 07:24:28.656393	setup	2018-10-29 07:24:28.656393
+1001#4701#1360005000132	eyesight_left_50_corrected	??50cm(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	??50cm(?:??)	eyesight_left_50_corrected	setup	2018-10-29 07:24:28.667046	setup	2018-10-29 07:24:28.667046
+1001#4701#1360005000132	both_eyes	????(?)	N	health	0200#0200#1	????	inspection_results	??	eyesight	????(?)	both_eyes	setup	2018-10-29 07:24:28.678144	setup	2018-10-29 07:24:28.678144
+1001#4701#1360005000132	both_eyes_corrected	????(?:??)	N	health	0200#0200#1	????	inspection_results	??	eyesight	????(?:??)	both_eyes_corrected	setup	2018-10-29 07:24:28.689116	setup	2018-10-29 07:24:28.689116
+1001#4701#1360005000132	right_1000	???1000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???1000Hz	right_1000	setup	2018-10-29 07:24:28.700191	setup	2018-10-29 07:24:28.700191
+1001#4701#1360005000132	left_1000	???1000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???1000Hz	left_1000	setup	2018-10-29 07:24:28.711069	setup	2018-10-29 07:24:28.711069
+1001#4701#1360005000132	right_4000	???4000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???4000Hz	right_4000	setup	2018-10-29 07:24:28.719406	setup	2018-10-29 07:24:28.719406
+1001#4701#1360005000132	left_4000	???4000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???4000Hz	left_4000	setup	2018-10-29 07:24:28.733665	setup	2018-10-29 07:24:28.733665
+1001#4701#1360005000132	right_250	???250Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???250Hz	right_250	setup	2018-10-29 07:24:28.744951	setup	2018-10-29 07:24:28.744951
+1001#4701#1360005000132	left_25	???250Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???250Hz	left_25	setup	2018-10-29 07:24:28.755196	setup	2018-10-29 07:24:28.755196
+1001#4701#1360005000132	right_500	???500Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???500Hz	right_500	setup	2018-10-29 07:24:28.766478	setup	2018-10-29 07:24:28.766478
+1001#4701#1360005000132	right_2000	???2000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???2000Hz	right_2000	setup	2018-10-29 07:24:28.777646	setup	2018-10-29 07:24:28.777646
+1001#4701#1360005000132	left_2000	???2000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???2000Hz	left_2000	setup	2018-10-29 07:24:28.787842	setup	2018-10-29 07:24:28.787842
+1001#4701#1360005000132	right_8000	???8000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???8000Hz	right_8000	setup	2018-10-29 07:24:28.800083	setup	2018-10-29 07:24:28.800083
+1001#4701#1360005000132	left_8000	???8000Hz	N	health	0200#0200#1	????	inspection_results	??	hearing	???8000Hz	left_8000	setup	2018-10-29 07:24:28.812605	setup	2018-10-29 07:24:28.812605
+1001#4701#1360005000132	scheie_h	????(??????:H)	N	health	0200#0200#1	????	inspection_results	????	funduscopy	??????:H	scheie_h	setup	2018-10-29 07:24:28.821838	setup	2018-10-29 07:24:28.821838
+1001#4701#1360005000132	funduscopy_findings	????(??????)	N	health	0200#0200#1	????	inspection_results	????	funduscopy	??????	funduscopy_findings	setup	2018-10-29 07:24:28.832531	setup	2018-10-29 07:24:28.832531
+1001#4701#1360005000132	color_perception	????	N	health	0200#0200#1	????	inspection_results	????	color_perception	????	color_perception	setup	2018-10-29 07:24:28.84499	setup	2018-10-29 07:24:28.84499
+1001#4701#1360005000132	right	????(?)	N	health	0200#0200#1	????	inspection_results	????	tonometry	????(?)	right	setup	2018-10-29 07:24:28.854795	setup	2018-10-29 07:24:28.854795
+1001#4701#1360005000132	left	????(?)	N	health	0200#0200#1	????	inspection_results	????	tonometry	????(?)	left	setup	2018-10-29 07:24:28.865461	setup	2018-10-29 07:24:28.865461
+1001#4701#1360005000132	grip_strength_right	???	N	health	0200#0200#1	????	inspection_results	??	grip_strength	???	grip_strength_right	setup	2018-10-29 07:24:28.877822	setup	2018-10-29 07:24:28.877822
+1001#4701#1360005000132	grip_strength_left	???	N	health	0200#0200#1	????	inspection_results	??	grip_strength	???	grip_strength_left	setup	2018-10-29 07:24:28.889008	setup	2018-10-29 07:24:28.889008
+1001#4701#1360005000132	bone_density	???	N	health	0200#0200#1	????	inspection_results	???	bone_density	???	bone_density	setup	2018-10-29 07:24:28.89574	setup	2018-10-29 07:24:28.89574
+1001#4701#1360005000132	z_score	Z-???	N	health	0200#0200#1	????	inspection_results	Z-???	z_score	Z-???	z_score	setup	2018-10-29 07:24:28.911369	setup	2018-10-29 07:24:28.911369
+1001#4701#1360005000132	t_score	T-???	N	health	0200#0200#1	????	inspection_results	T-???	t_score	T-???	t_score	setup	2018-10-29 07:24:28.922469	setup	2018-10-29 07:24:28.922469
+1001#4701#1360005000132	blood_abo	???(ABO)	N	health	0200#0200#1	????	inspection_results	???(ABO)	blood_abo	???(ABO)	blood_abo	setup	2018-10-29 07:24:28.929939	setup	2018-10-29 07:24:28.929939
+1001#4701#1360005000132	blood_rh	???(Rh)	N	health	0200#0200#1	????	inspection_results	???(Rh)	blood_rh	???(Rh)	blood_rh	setup	2018-10-29 07:24:28.956042	setup	2018-10-29 07:24:28.956042
+1001#4701#1360005000132	brinkman_index	BI??	N	health	0200#0200#1	????	inspection_results	BI??	brinkman_index	BI??	brinkman_index	setup	2018-10-29 07:24:28.965331	setup	2018-10-29 07:24:28.965331
+1001#4701#1360005000132	metabolic_syndrome	??????????????	N	health	0200#0200#1	????	inspection_results	????	synthetic_judgement	??????????????	metabolic_syndrome	setup	2018-10-29 07:24:28.9779	setup	2018-10-29 07:24:28.9779
+1001#4701#1360005000132	health_guidance_level	???????	N	health	0200#0200#1	????	inspection_results	????	synthetic_judgement	???????	health_guidance_level	setup	2018-10-29 07:24:28.987964	setup	2018-10-29 07:24:28.987964
+1001#4701#1360005000132	doctor_diagnosis	?????(??)	N	health	0200#0200#1	????	inspection_results	????	synthetic_judgement	?????(??)	doctor_diagnosis	setup	2018-10-29 07:24:28.998643	setup	2018-10-29 07:24:28.998643
+1001#4701#1360005000132	doctor_name	??????????????	N	health	0200#0200#1	????	inspection_results	????	synthetic_judgement	??????	doctor_name	setup	2018-10-29 07:24:29.0109	setup	2018-10-29 07:24:29.0109
+1001#4701#1360005000132	medication_blood_pressure	??1(??)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??1(??)	medication_blood_pressure	??_??1(??)	medication_blood_pressure	setup	2018-10-29 07:24:29.021243	setup	2018-10-29 07:24:29.021243
+1001#4701#1360005000132	medication_blood_glucose	??2(??)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??2(??)	medication_blood_glucose	??_??2(??)	medication_blood_glucose	setup	2018-10-29 07:24:29.032072	setup	2018-10-29 07:24:29.032072
+1001#4701#1360005000132	medication_lipid	??3(??)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??3(??)	medication_lipid	??_??3(??)	medication_lipid	setup	2018-10-29 07:24:29.045502	setup	2018-10-29 07:24:29.045502
+1001#4701#1360005000132	past_history_cerebral_blood_vessel	???1(???)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???1(???)	past_history_cerebral_blood_vessel	??_???1(???)	past_history_cerebral_blood_vessel	setup	2018-10-29 07:24:29.054112	setup	2018-10-29 07:24:29.054112
+1001#4701#1360005000132	past_history_cardiac_blood_vessel	???2(???)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???2(???)	past_history_cardiac_blood_vessel	??_???2(???)	past_history_cardiac_blood_vessel	setup	2018-10-29 07:24:29.066084	setup	2018-10-29 07:24:29.066084
+1001#4701#1360005000132	past_history_kidney_failure	???3(???ú????)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???3(????????)	past_history_kidney_failure	??_???3(????????)	past_history_kidney_failure	setup	2018-10-29 07:24:29.078797	setup	2018-10-29 07:24:29.078797
+1001#4701#1360005000132	anemia	??	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??	anemia	??_??	anemia	setup	2018-10-29 07:24:29.098053	setup	2018-10-29 07:24:29.098053
+1001#4701#1360005000132	smoking	??	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??	smoking	??_??	smoking	setup	2018-10-29 07:24:29.111633	setup	2018-10-29 07:24:29.111633
+1001#4701#1360005000132	weight_change_from_20	20????????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_20????????	weight_change_from_20	??_20????????	weight_change_from_20	setup	2018-10-29 07:24:29.120741	setup	2018-10-29 07:24:29.120741
+1001#4701#1360005000132	exercise_habits	30????????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_????	exercise_habits	??_????	exercise_habits	setup	2018-10-29 07:24:29.13115	setup	2018-10-29 07:24:29.13115
+1001#4701#1360005000132	physical_habits	????????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_????	physical_activity	??_????	physical_habits	setup	2018-10-29 07:24:29.144952	setup	2018-10-29 07:24:29.144952
+1001#4701#1360005000132	walking_speed	????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_????	walking_speed	??_????	walking_speed	setup	2018-10-29 07:24:29.151946	setup	2018-10-29 07:24:29.151946
+1001#4701#1360005000132	weight_change_1_year	1???????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_1???????	weight_change_1_year	??_1???????	weight_change_1_year	setup	2018-10-29 07:24:29.164518	setup	2018-10-29 07:24:29.164518
+1001#4701#1360005000132	eat_fast	???1(????)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???1(????)	eat_fast	??_???1(????)	eat_fast	setup	2018-10-29 07:24:29.176367	setup	2018-10-29 07:24:29.176367
+1001#4701#1360005000132	eat_bedtime	???2(???)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???2(???)	eat_bedtime	??_???2(???)	eat_bedtime	setup	2018-10-29 07:24:29.187248	setup	2018-10-29 07:24:29.187248
+1001#4701#1360005000132	eat_snack	???3(??/??)	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???3(??/??)	eat_snack	??_???3(??/??)	eat_snack	setup	2018-10-29 07:24:29.196715	setup	2018-10-29 07:24:29.196715
+1001#4701#1360005000132	eating_habits	???	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???	eating_habits	??_???	eating_habits	setup	2018-10-29 07:24:29.210021	setup	2018-10-29 07:24:29.210021
+1001#4701#1360005000132	drinking	??	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??	drinking	??_??	drinking	setup	2018-10-29 07:24:29.218167	setup	2018-10-29 07:24:29.218167
+1001#4701#1360005000132	drinking_amount	???	N	health	0200#0100#1	??????	medical_checkup_interviews	??_???	drinking_amount	??_???	drinking_amount	setup	2018-10-29 07:24:29.229194	setup	2018-10-29 07:24:29.229194
+1001#4701#1360005000132	sleep	??	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??	sleep	??_??	sleep	setup	2018-10-29 07:24:29.240134	setup	2018-10-29 07:24:29.240134
+1001#4701#1360005000132	lifestyle_habits	???????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_????	lifestyle_habits	??_????	lifestyle_habits	setup	2018-10-29 07:24:29.245993	setup	2018-10-29 07:24:29.245993
+1001#4701#1360005000132	health_guidance	???????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_????	health_guidance	??_????	health_guidance	setup	2018-10-29 07:24:29.251438	setup	2018-10-29 07:24:29.251438
+1001#4701#1360005000132	finding1	??1	N	health	0200#0200#1	??	findings	????	medical_examination_findings	????	medical_examination_findings	setup	2018-10-29 07:24:29.259523	setup	2018-10-29 07:24:29.259523
+1001#4701#1360005000132	finding2	??2	N	health	0200#0200#1	??	findings	????	medical_examination_findings	????	medical_examination_findings	setup	2018-10-29 07:24:29.274654	setup	2018-10-29 07:24:29.274654
+1002#0047#00470013	last_kousin_date	??????	Y	\N	\N							setup	2018-10-29 07:24:29.284747	setup	2018-10-29 07:24:29.284747
+1002#0047#00470013	hokenno	?????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	?????	insurer	setup	2018-10-29 07:24:29.297496	setup	2018-10-29 07:24:29.297496
+1002#0047#00470013	hokensyo_kigo	???????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	???????	insured_mark	setup	2018-10-29 07:24:29.307459	setup	2018-10-29 07:24:29.307459
+1002#0047#00470013	hokensyo_no	???????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	???????	insured_number	setup	2018-10-29 07:24:29.320536	setup	2018-10-29 07:24:29.320536
+1003#0001#0	sky_ym	????(???DPC)????	Y	\N	\N							setup	2018-10-29 07:24:29.32895	setup	2018-10-29 07:24:29.32895
+1003#0003#0	sky_ym	????(??)????	Y	\N	\N							setup	2018-10-29 07:24:29.340167	setup	2018-10-29 07:24:29.340167
+1003#0004#0	sky_ym	????(??)????	Y	\N	\N							setup	2018-10-29 07:24:29.351337	setup	2018-10-29 07:24:29.351337
+3001#0000#0	ifa_date	?????	Y	\N	\N							setup	2018-10-29 16:15:37.689492	setup	2018-10-29 16:15:37.689492
+3001#0000#0	patient_id	??ID(??ID)	N	personal	0100#0100#1	????	personal_informations	??ID(??ID)	patient_id	??ID	patient_id	setup	2018-10-29 16:15:38.192112	setup	2018-10-29 16:15:38.192112
+3001#0000#0	full_name	??	N	personal	0100#0100#1	????	personal_informations	??	full_name	??	full_name	setup	2018-10-29 16:15:38.216297	setup	2018-10-29 16:15:38.216297
+3001#0000#0	birth_day	????	N	personal	0100#0100#1	????	personal_informations	????	birth_day	????	birth_day	setup	2018-10-29 16:15:38.229372	setup	2018-10-29 16:15:38.229372
+3001#0000#0	sex	??	N	personal	0100#0100#1	????	personal_informations	??	sex	??	sex	setup	2018-10-29 16:15:38.244176	setup	2018-10-29 16:15:38.244176
+3001#0000#0	insurer	?????	N	personal	0100#0100#1	????	personal_informations	??????	insured_information	?????	insurer	setup	2018-10-29 16:15:38.256221	setup	2018-10-29 16:15:38.256221
+3001#0000#0	height	??	N	health	0200#0100#1	????	physical_informations	????	standard_info	??	height	setup	2018-10-29 16:15:38.270028	setup	2018-10-29 16:15:38.270028
+3001#0000#0	weight	??	N	health	0200#0100#1	????	physical_informations	????	standard_info	??	weight	setup	2018-10-29 16:15:38.283326	setup	2018-10-29 16:15:38.283326
+3001#0000#0	smoking	????	N	health	0200#0100#1	??????	medical_checkup_interviews	??_??	smoking	??_??	smoking	setup	2018-10-29 16:15:38.295396	setup	2018-10-29 16:15:38.295396
+3001#0000#0	blood_abo	???(ABO)	N	health	0200#0200#1	????	inspection_results	???(ABO)	blood_abo	???(ABO)	blood_abo	setup	2018-10-29 16:15:38.304717	setup	2018-10-29 16:15:38.304717
+3001#0000#0	systolic	?????(??)	N	health	0200#0200#1	????	inspection_results	??	blood_pressure	?????	systolic	setup	2018-10-29 16:15:38.314663	setup	2018-10-29 16:15:38.314663
+3001#0000#0	diastolic	?????(??)	N	health	0200#0200#1	????	inspection_results	??	blood_pressure	?????	diastolic	setup	2018-10-29 16:15:38.322271	setup	2018-10-29 16:15:38.322271
+\.
+
+
+--
+-- Data for Name: consolidation_priorities; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.consolidation_priorities (db_name, table_caption, table_name, priority, resource_type, created_by, created_at, updated_by, updated_at) FROM stdin;
+personal	OA?l?Œ¤	personal_informations	10	0100#0100#1	setup	2018-10-29 07:23:59.087544	setup	2018-10-29 07:23:59.087544
+health	?g`I?Œ¤	physical_informations	11	0200#0100#1	setup	2018-10-29 07:23:59.108383	setup	2018-10-29 07:23:59.108383
+health	OY?,O<%E	inspection_results	13	0200#0200#1	setup	2018-10-29 07:23:59.210647	setup	2018-10-29 07:23:59.210647
+health	OO%tOY?,O<%E	blood_test_results	14	0200#0200#1	setup	2018-10-29 07:23:59.216049	setup	2018-10-29 07:23:59.216049
+health	?SOc	findings	15	0200#0200#1	setup	2018-10-29 07:23:59.227834	setup	2018-10-29 07:23:59.227834
+health	Interview	medical_checkup_interviews	12	0200#0100#1	setup	2018-10-29 16:50:58.007336	setup	2018-10-29 16:50:58.007336
+\.
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.items (name, caption, db_name, resource_type, table_caption, table_name, class_caption, class_code, created_by, created_at, updated_by, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: log_api_call; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.log_api_call (sequence_id, result, api_name, api_parameters, message_id, message, system_message, ip_address, created_at) FROM stdin;
+1	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	I00001	対象のデータがありませんでした。	\N	172.20.0.64	2018-10-29 18:02:49.459486
+2	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	I00001	対象のデータがありませんでした。	\N	172.20.0.64	2018-10-29 18:03:09.664499
+3	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"insert","resource_key":"","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				172.20.0.64	2018-10-29 18:03:10.878926
+4	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	172.20.0.64	2018-10-29 18:03:13.782506
+5	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	172.20.0.64	2018-10-29 23:12:11.068944
+6	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}	I00001	対象のデータがありませんでした。	\N	172.20.0.64	2018-10-29 23:12:19.595034
+7	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"insert","resource_key":"","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				172.20.0.64	2018-10-29 23:12:20.302975
+8	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}			\N	172.20.0.64	2018-10-29 23:12:28.208238
+9	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}			\N	172.20.0.64	2018-10-29 23:12:38.737418
+10	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"184ef3a4-6fd6-36a4-ad6b-455faf4a0f27","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"70","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				172.20.0.64	2018-10-29 23:12:39.070159
+11	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}			\N	172.20.0.64	2018-10-29 23:12:45.928924
+12	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:12:38.325852
+13	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:12:41.748752
+14	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:13:21.291254
+15	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:15:08.454743
+16	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:21:30.560913
+17	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:22:09.543354
+18	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:22:11.15655
+19	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:22:13.943006
+20	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:22:16.938624
+21	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:34:03.757375
+22	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:47:03.36827
+23	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:51:13.084449
+24	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:52:27.435742
+25	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin1234"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:53:46.247441
+26	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin1234"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:54:02.216816
+27	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 01:54:05.037136
+55	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin12345"}}	I00001	対象のデータがありませんでした。	\N	192.168.8.101	2018-11-03 02:10:40.915663
+28	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.15.149]	\N	192.168.15.149	2018-10-30 02:01:38.007017
+29	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 02:04:57.758591
+30	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 02:08:28.751532
+31	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 02:08:29.172378
+32	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 02:59:18.314718
+33	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:06:49.512534
+34	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:06:54.298772
+35	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 03:06:54.553762
+36	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:06:56.499895
+37	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:09:05.377836
+38	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:09:07.751268
+39	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 03:09:07.872824
+40	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:37:45.741643
+41	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:37:55.397615
+42	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"120","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 03:37:55.741795
+43	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 03:38:10.091662
+44	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 04:25:50.758872
+45	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 04:25:52.405574
+46	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"120","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 04:25:52.685862
+47	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 05:22:04.813549
+48	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 05:22:30.038165
+49	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"130","smoking":"はい","insurer":"dummy"}}]}				192.168.15.149	2018-10-30 05:22:30.185052
+50	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.15.149	2018-10-30 05:22:53.685105
+51	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}			\N	192.168.8.101	2018-11-03 02:07:47.456978
+52	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"update","resource_key":"4aa578fb-10b2-3d26-a0af-7344fe7a0f0a","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin123","full_name":"Amer Test","sex":"M","birth_day":"1987-12-27","height":"170.0","weight":"68","blood_abo":"O","systolic":"151","diastolic":"100","smoking":"No","insurer":"dummy"}}]}				192.168.8.101	2018-11-03 02:07:48.895116
+53	N	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin1299"}}	I00001	対象のデータがありませんでした。	\N	192.168.8.101	2018-11-03 02:08:28.79198
+54	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"insert","resource_key":"","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin1299","full_name":"Amer","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"no","insurer":"dummy"}}]}				192.168.8.101	2018-11-03 02:08:28.953935
+56	N	consolidate	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","from_type":"3001#0000#0","to_type":"","data":[{"method":"insert","resource_key":"","bind_parameters":{"ifa_date":"2018-09-27","patient_id":"nanmin12345","full_name":"田中　太郎","sex":"M","birth_day":"1974-05-16","height":"170.0","weight":"68","blood_abo":"A","systolic":"151","diastolic":"100","smoking":"はい","insurer":"dummy"}}]}				192.168.8.101	2018-11-03 02:10:41.051678
+57	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:04:17.624622
+58	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:06:53.401141
+59	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:07:03.137954
+60	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:07:12.103003
+61	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:07:21.525689
+62	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:07:53.116562
+63	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:07:59.37999
+64	E	template/getpersonalresourcekey	{"auth_key":"0b8fe32b-78c2-4fd0-80c5-043d665831af","bind_parameters":{"patient_id":"nanmin123"}}	E00002	APIを利用する権限がありません。リクエスト元IPアドレス:[192.168.8.100]	\N	192.168.8.100	2019-01-01 01:08:18.279226
+\.
+
+
+--
+-- Data for Name: log_system; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.log_system (sequence_id, process_number, level, event_code, message, function_name, derived_from, ip_address, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: provisional_sql_templates; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.provisional_sql_templates (name, sql, db_name, response_type) FROM stdin;
+getpersonalresourcekey	SELECT\n    ('{ "resource_key" : "' || resource_key || '" }')::jsonb\n ||\n    (SELECT json_data FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'full_name'\n     ORDER BY reference_datetime DESC\n     LIMIT 1)\n || (SELECT json_data FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'birth_day'\n     ORDER BY reference_datetime DESC\n     LIMIT 1)\n || (SELECT json_data FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'insured_information'\n     ORDER BY reference_datetime DESC\n     LIMIT 1)\n || (SELECT json_data FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'sex'\n     ORDER BY reference_datetime DESC\n     LIMIT 1)\n    AS json_data\nFROM\n    personal_informations main\nWHERE\n    item_class_code = 'patient_id'\nAND json_data->>'patient_id' = :patient_id\nGROUP BY resource_key	personal	json
+getlatestpersonalinfo01	WITH\n     full_name AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'full_name'\n         AND json_data->>'full_name' = :full_name\n         GROUP BY resource_key\n     ),\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     ),\n     insurer AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'insured_information'\n         AND json_data->>'insurer' = :insurer\n         AND json_data->>'insured_mark' = :insured_mark\n         AND json_data->>'insured_number' = :insured_number\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     \n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     \n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     \n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     \n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     full_name main\n INNER JOIN\n     birth_day\n ON\n     main.resource_key = birth_day.resource_key\n INNER JOIN\n     insurer\n ON\n     main.resource_key = insurer.resource_key\n WHERE\nEXISTS  (SELECT resource_key FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'sex'\n       AND sub.json_data->>'sex' = :sex\n     )\n	personal	json
+getlatestpersonalinfo02	WITH\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     ),\n     insurer AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'insured_information'\n         AND json_data->>'insurer' = :insurer\n         AND json_data->>'insured_mark' = :insured_mark\n         AND json_data->>'insured_number' = :insured_number\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     birth_day main\n INNER JOIN\n     insurer\n ON\n     main.resource_key = insurer.resource_key\n WHERE\nEXISTS  (SELECT resource_key FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'sex'\n       AND sub.json_data->>'sex' = :sex\n     )\n	personal	json
+getlatestpersonalinfo03	WITH\n     full_name AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'full_name'\n         AND json_data->>'full_name' = :full_name\n         GROUP BY resource_key\n     ),\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     full_name main\n INNER JOIN\n     birth_day\n ON\n     main.resource_key = birth_day.resource_key\n WHERE\nEXISTS  (SELECT resource_key FROM personal_informations sub\n     WHERE sub.resource_key = main.resource_key\n       AND sub.item_class_code = 'sex'\n       AND sub.json_data->>'sex' = :sex\n     )\n	personal	json
+getlatestpersonalinfo04	 WITH\n     full_name AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'full_name'\n         AND json_data->>'full_name' = :full_name\n         GROUP BY resource_key\n     ),\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     ),\n     insurer AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'insured_information'\n         AND json_data->>'insurer' = :insurer\n         AND json_data->>'insured_mark' = :insured_mark\n         AND json_data->>'insured_number' = :insured_number\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     full_name main \n INNER JOIN\n     birth_day \n ON\n     main.resource_key = birth_day.resource_key\n INNER JOIN\n     insurer\n ON\n     main.resource_key = insurer.resource_key\n	personal	json
+getlatestpersonalinfo05	 WITH\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     ),\n     insurer AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'insured_information'\n         AND json_data->>'insurer' = :insurer\n         AND json_data->>'insured_mark' = :insured_mark\n         AND json_data->>'insured_number' = :insured_number\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     birth_day main\n INNER JOIN\n     insurer\n ON\n     main.resource_key = insurer.resource_key\n	personal	json
+getlatestpersonalinfo06	 WITH\n     full_name AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'full_name'\n         AND json_data->>'full_name' = :full_name\n         GROUP BY resource_key\n     ),\n     birth_day AS (\n         SELECT\n             resource_key\n         FROM\n             personal_informations\n         WHERE\n             item_class_code = 'birth_day'\n         AND json_data->>'birth_day' = :birth_day\n         GROUP BY resource_key\n     )\n SELECT\n     ('{ "resource_key" : "' || main.resource_key || '" }')::jsonb\n  ||\n     (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'full_name'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'birth_day'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'insured_information'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n  || (SELECT json_data FROM personal_informations sub\n      WHERE sub.resource_key = main.resource_key\n        AND sub.item_class_code = 'sex'\n      ORDER BY reference_datetime DESC\n      LIMIT 1)\n     AS json_data\n FROM\n     full_name main \n INNER JOIN\n     birth_day \n ON\n     main.resource_key = birth_day.resource_key\n	personal	json
+\.
+
+
+--
+-- Data for Name: resource_types; Type: TABLE DATA; Schema: public; Owner: core
+--
+
+COPY public.resource_types (type, caption, created_by, created_at, updated_by, updated_at) FROM stdin;
+1001#0000#0	??	setup	2018-10-29 07:23:31.85402	setup	2018-10-29 07:23:31.85402
+1001#4701#0	????(???)	setup	2018-10-29 07:23:31.869743	setup	2018-10-29 07:23:31.869743
+1001#4701#1360005000132	????(??????)	setup	2018-10-29 07:23:31.879968	setup	2018-10-29 07:23:31.879968
+1002#0000#0	????	setup	2018-10-29 07:23:31.898225	setup	2018-10-29 07:23:31.898225
+1002#0047#0	????(???)	setup	2018-10-29 07:23:31.909074	setup	2018-10-29 07:23:31.909074
+1002#0047#00470013	????(?????)	setup	2018-10-29 07:23:31.919111	setup	2018-10-29 07:23:31.919111
+1003#0000#0	????	setup	2018-10-29 07:23:31.93229	setup	2018-10-29 07:23:31.93229
+1003#0001#0	????(??,DPC)	setup	2018-10-29 07:23:31.943847	setup	2018-10-29 07:23:31.943847
+1003#0003#0	????(??)	setup	2018-10-29 07:23:31.953417	setup	2018-10-29 07:23:31.953417
+1003#0004#0	????(??)	setup	2018-10-29 07:23:31.964401	setup	2018-10-29 07:23:31.964401
+1003#0471#0	????(??)(???)	setup	2018-10-29 07:23:31.974338	setup	2018-10-29 07:23:31.974338
+1003#0471#00470013	????(??)(?????)	setup	2018-10-29 07:23:31.984038	setup	2018-10-29 07:23:31.984038
+1003#0472#0	????(??)(???)	setup	2018-10-29 07:23:31.994513	setup	2018-10-29 07:23:31.994513
+1003#0472#00470013	????(??)(?????)	setup	2018-10-29 07:23:32.000322	setup	2018-10-29 07:23:32.000322
+1003#0473#0	????(??)(???)	setup	2018-10-29 07:23:32.016643	setup	2018-10-29 07:23:32.016643
+1003#0473#00470013	????(??)(?????)	setup	2018-10-29 07:23:32.021754	setup	2018-10-29 07:23:32.021754
+1003#0474#0	????(DPC)(???)	setup	2018-10-29 07:23:32.027096	setup	2018-10-29 07:23:32.027096
+1003#0474#00470013	????(DPC)(?????)	setup	2018-10-29 07:23:32.030923	setup	2018-10-29 07:23:32.030923
+0100#0000#0	????	setup	2018-10-29 07:23:32.039151	setup	2018-10-29 07:23:32.039151
+0100#0100#0	????	setup	2018-10-29 07:23:32.043357	setup	2018-10-29 07:23:32.043357
+0100#0100#1	????	setup	2018-10-29 07:23:32.05049	setup	2018-10-29 07:23:32.05049
+0200#0000#0	????	setup	2018-10-29 07:23:32.060385	setup	2018-10-29 07:23:32.060385
+0200#0100#0	??????	setup	2018-10-29 07:23:32.065327	setup	2018-10-29 07:23:32.065327
+0200#0100#1	??????	setup	2018-10-29 07:23:32.073182	setup	2018-10-29 07:23:32.073182
+0200#0200#0	????	setup	2018-10-29 07:23:32.082712	setup	2018-10-29 07:23:32.082712
+0200#0200#1	????	setup	2018-10-29 07:23:32.087777	setup	2018-10-29 07:23:32.087777
+3001#0000#0	Refugee	setup	2018-10-29 16:56:11.942192	setup	2018-10-29 16:56:11.942192
+\.
+
+
+--
+-- Name: seq_anchor_key; Type: SEQUENCE SET; Schema: public; Owner: core
+--
+
+SELECT pg_catalog.setval('public.seq_anchor_key', 4, true);
+
+
+--
+-- Name: seq_log_api_call; Type: SEQUENCE SET; Schema: public; Owner: core
+--
+
+SELECT pg_catalog.setval('public.seq_log_api_call', 64, true);
+
+
+--
+-- Name: seq_log_system_id; Type: SEQUENCE SET; Schema: public; Owner: core
+--
+
+SELECT pg_catalog.setval('public.seq_log_system_id', 1, false);
+
+
+--
+-- Name: seq_log_system_process_number; Type: SEQUENCE SET; Schema: public; Owner: core
+--
+
+SELECT pg_catalog.setval('public.seq_log_system_process_number', 1, false);
+
+
+--
+-- Name: seq_resource_key; Type: SEQUENCE SET; Schema: public; Owner: core
+--
+
+SELECT pg_catalog.setval('public.seq_resource_key', 16, true);
+
+
+--
+-- Name: anchor_resources pk_anchor_resources; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.anchor_resources
+    ADD CONSTRAINT pk_anchor_resources PRIMARY KEY (anchor_key, resource_type, resource_key);
+
+
+--
+-- Name: auth_keys pk_auth_keys; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.auth_keys
+    ADD CONSTRAINT pk_auth_keys PRIMARY KEY (auth_key);
+
+
+--
+-- Name: consolidation_items pk_consolidation_items; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.consolidation_items
+    ADD CONSTRAINT pk_consolidation_items PRIMARY KEY (from_resource_type, from_item_name);
+
+
+--
+-- Name: consolidation_priorities pk_consolidation_priorities; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.consolidation_priorities
+    ADD CONSTRAINT pk_consolidation_priorities PRIMARY KEY (db_name, table_name);
+
+
+--
+-- Name: items pk_items; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT pk_items PRIMARY KEY (name);
+
+
+--
+-- Name: log_api_call pk_log_api_call; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.log_api_call
+    ADD CONSTRAINT pk_log_api_call PRIMARY KEY (sequence_id);
+
+
+--
+-- Name: log_system pk_log_system; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.log_system
+    ADD CONSTRAINT pk_log_system PRIMARY KEY (sequence_id);
+
+
+--
+-- Name: provisional_sql_templates pk_provisional_sql_templates; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.provisional_sql_templates
+    ADD CONSTRAINT pk_provisional_sql_templates PRIMARY KEY (name);
+
+
+--
+-- Name: resource_types pk_resource_types; Type: CONSTRAINT; Schema: public; Owner: core
+--
+
+ALTER TABLE ONLY public.resource_types
+    ADD CONSTRAINT pk_resource_types PRIMARY KEY (type);
+
+
+--
+-- Name: idx_log_system_1; Type: INDEX; Schema: public; Owner: core
+--
+
+CREATE INDEX idx_log_system_1 ON public.log_system USING btree (process_number, created_at);
+
+
+--
+-- Name: uk_anchor_resources_1; Type: INDEX; Schema: public; Owner: core
+--
+
+CREATE UNIQUE INDEX uk_anchor_resources_1 ON public.anchor_resources USING btree (resource_key);
+
+
+--
+-- Name: uk_consolidation_priorities_1; Type: INDEX; Schema: public; Owner: core
+--
+
+CREATE UNIQUE INDEX uk_consolidation_priorities_1 ON public.consolidation_priorities USING btree (priority);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

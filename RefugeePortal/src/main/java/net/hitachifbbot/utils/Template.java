@@ -1,5 +1,7 @@
 package net.hitachifbbot.utils;
 
+import net.hitachifbbot.model.DoctorUserData;
+import net.hitachifbbot.model.NamminUserData;
 import net.hitachifbbot.session.AppSession;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.IContext;
@@ -60,10 +62,10 @@ public class Template {
 
         // ユーザーの希望言語を取得
         AppSession.UserData userData = AppSession.getUserData(req);
-        if (userData instanceof AppSession.DoctorUserData){
-            userLangCode = ((AppSession.DoctorUserData) userData).dbUserData.translateLangCode;
-        }else if(userData instanceof AppSession.NamminUserData){
-            userLangCode = ((AppSession.NamminUserData) userData).dbUserData.translateLangCode;
+        if (userData instanceof DoctorUserData){
+            userLangCode = ((DoctorUserData) userData).getDbUserData().translateLangCode;
+        }else if(userData instanceof NamminUserData){
+            userLangCode = ((NamminUserData) userData).getDbUserData().translateLangCode;
         }
 
         // 希望言語が存在したらtemplateLangCodeに設定

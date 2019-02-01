@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('សូមទទួលការសាកសួរវេជ្ជសាស្រ្តនៅឯកម្មវិធីផ្ញើសារ។ ប្រសិនបើអ្នកត្រូវបានសម្ភាសរួចហើយសូមដំណើរការឡើងវិញ។')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<%@page import="com.refugees.common.Validator"%>
+<%@page import="com.refugees.servlets.doctor.ScreeningDetailServlet.ScreeningDetail"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ResourceBundle"%>
+<%@page import="java.util.Locale"%>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Immigration and Refugee Support Portal</title>
+<link href="/css/html5-doctor-reset-stylesheet.min.css" rel="stylesheet" />
+<link href="/css/pc-style-basic.css" rel="stylesheet" />
+</head>
+<%
+	Locale locale = request.getLocale();
+	ResourceBundle msgBundle = ResourceBundle.getBundle("Messages", locale);
+	%>
+<body>
+<div id="wrapper">
+
+	<header>
+		<div>
+			<h1><a href="index.html"><%=msgBundle.getString("common.title")%></a></h1>
+		</div>
+	</header>
+<div id="google_translate_element"></div>
+	<section id="static-list-area">
+		<h2><span>Name:</span>${nammin_name}</h2>		
+		<div class="list-area">
+        <table class="interviewee-data">
+            <colgroup>
+                <col width="68%" />
+                <col width="32%" />
+            </colgroup>
+            <tr>
+                <th>Question content</th>
+                <th>Reply</th>
+            </tr>
+			<%
+			List<ScreeningDetail> details = (List<ScreeningDetail>) request
+						.getAttribute("details");
+				for (ScreeningDetail d : details) {
+			%>
+				<tr >
+					<td id="Question<%=d.getQuestionId()%>"><%=msgBundle.getString(d.getQuestion()) %></td>
+					<td><%=Validator.evaluateQuestionValue(d.getQuestionId(), d.getAnswer()) %></td>
+				</tr>
+				<%} %>
+        </table>
+    </div>
+    <p class="btn-large" style="width:30%;margin:32px auto 0;float: right;"><a href="javascript:postAPI()" onclick="">send a message</a></p>
+     <p class="btn-large" style="width:30%;margin:32px auto 0;float: left;"><a href="/doctor/index.html" onclick="">Back</a></p>
+</section>
+</div>
+<form action="/doctor/logout" method="POST" name="form_logout">
+	<input type="hidden" th:name="${csrfTokenName}" th:value="${csrfToken2}" />
+</form>
+</body>
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script>
+    function confirmLogout(){
+        if(!confirm("Do you want to log out?")){
+            return false;
+        }else{
+            form_logout.submit();
+        }
+    }
+</script>
+<script type="text/javascript">
+function confirm()
+{
+	$.ajax({
+		type : "POST",
+		url : 'doctor/screening_detail?action=CONFIRM&id=${namminID}',
+		
+		success : function(data) {
+			alert(data.message);
+		}
+	});
+}
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script>
+
+<script type="text/javascript" src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</html>
+</html>

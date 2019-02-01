@@ -1,0 +1,115 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.1
+-- Dumped by pg_dump version 11.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: personal_informations; Type: TABLE; Schema: public; Owner: personal
+--
+
+CREATE TABLE public.personal_informations (
+    resource_key uuid NOT NULL,
+    reference_datetime timestamp without time zone NOT NULL,
+    item_class_code character varying(100) NOT NULL,
+    derived_from character varying(26) NOT NULL,
+    json_data jsonb NOT NULL,
+    created_by character varying(32) NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_by character varying(32) NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.personal_informations OWNER TO personal;
+
+--
+-- Data for Name: personal_informations; Type: TABLE DATA; Schema: public; Owner: personal
+--
+
+COPY public.personal_informations (resource_key, reference_datetime, item_class_code, derived_from, json_data, created_by, created_at, updated_by, updated_at) FROM stdin;
+184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	2018-09-27 00:00:00	birth_day	3001#0000#0	{"birth_day": "1974-05-16"}	consolidate	2018-10-29 23:12:38.95706	consolidate	2018-10-29 23:12:38.95706
+184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	2018-09-27 00:00:00	full_name	3001#0000#0	{"full_name": "田中　太郎"}	consolidate	2018-10-29 23:12:38.95706	consolidate	2018-10-29 23:12:38.95706
+184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	2018-09-27 00:00:00	insured_information	3001#0000#0	{"insurer": "dummy"}	consolidate	2018-10-29 23:12:38.95706	consolidate	2018-10-29 23:12:38.95706
+184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	2018-09-27 00:00:00	patient_id	3001#0000#0	{"patient_id": "123"}	consolidate	2018-10-29 23:12:38.95706	consolidate	2018-10-29 23:12:38.95706
+184ef3a4-6fd6-36a4-ad6b-455faf4a0f27	2018-09-27 00:00:00	sex	3001#0000#0	{"sex": "M"}	consolidate	2018-10-29 23:12:38.95706	consolidate	2018-10-29 23:12:38.95706
+4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	2018-09-27 00:00:00	birth_day	3001#0000#0	{"birth_day": "1987-12-27"}	consolidate	2018-11-03 02:07:48.41876	consolidate	2018-11-03 02:07:48.41876
+4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	2018-09-27 00:00:00	full_name	3001#0000#0	{"full_name": "Amer Test"}	consolidate	2018-11-03 02:07:48.41876	consolidate	2018-11-03 02:07:48.41876
+4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	2018-09-27 00:00:00	insured_information	3001#0000#0	{"insurer": "dummy"}	consolidate	2018-11-03 02:07:48.41876	consolidate	2018-11-03 02:07:48.41876
+4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	2018-09-27 00:00:00	patient_id	3001#0000#0	{"patient_id": "nanmin123"}	consolidate	2018-11-03 02:07:48.41876	consolidate	2018-11-03 02:07:48.41876
+4aa578fb-10b2-3d26-a0af-7344fe7a0f0a	2018-09-27 00:00:00	sex	3001#0000#0	{"sex": "M"}	consolidate	2018-11-03 02:07:48.41876	consolidate	2018-11-03 02:07:48.41876
+b7900657-c891-3e3e-809e-9c73a26683a3	2018-09-27 00:00:00	birth_day	3001#0000#0	{"birth_day": "1974-05-16"}	consolidate	2018-11-03 02:08:28.903332	consolidate	2018-11-03 02:08:28.903332
+b7900657-c891-3e3e-809e-9c73a26683a3	2018-09-27 00:00:00	full_name	3001#0000#0	{"full_name": "Amer"}	consolidate	2018-11-03 02:08:28.903332	consolidate	2018-11-03 02:08:28.903332
+b7900657-c891-3e3e-809e-9c73a26683a3	2018-09-27 00:00:00	insured_information	3001#0000#0	{"insurer": "dummy"}	consolidate	2018-11-03 02:08:28.903332	consolidate	2018-11-03 02:08:28.903332
+b7900657-c891-3e3e-809e-9c73a26683a3	2018-09-27 00:00:00	patient_id	3001#0000#0	{"patient_id": "nanmin1299"}	consolidate	2018-11-03 02:08:28.903332	consolidate	2018-11-03 02:08:28.903332
+b7900657-c891-3e3e-809e-9c73a26683a3	2018-09-27 00:00:00	sex	3001#0000#0	{"sex": "M"}	consolidate	2018-11-03 02:08:28.903332	consolidate	2018-11-03 02:08:28.903332
+21d5f35f-4eda-3683-b9be-40c5ab45ae87	2018-09-27 00:00:00	birth_day	3001#0000#0	{"birth_day": "1974-05-16"}	consolidate	2018-11-03 02:10:40.996539	consolidate	2018-11-03 02:10:40.996539
+21d5f35f-4eda-3683-b9be-40c5ab45ae87	2018-09-27 00:00:00	full_name	3001#0000#0	{"full_name": "田中　太郎"}	consolidate	2018-11-03 02:10:40.996539	consolidate	2018-11-03 02:10:40.996539
+21d5f35f-4eda-3683-b9be-40c5ab45ae87	2018-09-27 00:00:00	insured_information	3001#0000#0	{"insurer": "dummy"}	consolidate	2018-11-03 02:10:40.996539	consolidate	2018-11-03 02:10:40.996539
+21d5f35f-4eda-3683-b9be-40c5ab45ae87	2018-09-27 00:00:00	patient_id	3001#0000#0	{"patient_id": "nanmin12345"}	consolidate	2018-11-03 02:10:40.996539	consolidate	2018-11-03 02:10:40.996539
+21d5f35f-4eda-3683-b9be-40c5ab45ae87	2018-09-27 00:00:00	sex	3001#0000#0	{"sex": "M"}	consolidate	2018-11-03 02:10:40.996539	consolidate	2018-11-03 02:10:40.996539
+\.
+
+
+--
+-- Name: personal_informations pk_personal_informations; Type: CONSTRAINT; Schema: public; Owner: personal
+--
+
+ALTER TABLE ONLY public.personal_informations
+    ADD CONSTRAINT pk_personal_informations PRIMARY KEY (resource_key, reference_datetime, item_class_code, derived_from);
+
+
+--
+-- Name: idx_personal_informations_1; Type: INDEX; Schema: public; Owner: personal
+--
+
+CREATE INDEX idx_personal_informations_1 ON public.personal_informations USING btree (resource_key, reference_datetime, derived_from);
+
+
+--
+-- Name: idx_personal_informations_2; Type: INDEX; Schema: public; Owner: personal
+--
+
+CREATE INDEX idx_personal_informations_2 ON public.personal_informations USING btree (item_class_code, ((json_data ->> 'patient_id'::text))) WHERE ((item_class_code)::text = 'patient_id'::text);
+
+
+--
+-- Name: idx_personal_informations_3; Type: INDEX; Schema: public; Owner: personal
+--
+
+CREATE INDEX idx_personal_informations_3 ON public.personal_informations USING btree (item_class_code, ((json_data ->> 'full_name'::text))) WHERE ((item_class_code)::text = 'full_name'::text);
+
+
+--
+-- Name: idx_personal_informations_4; Type: INDEX; Schema: public; Owner: personal
+--
+
+CREATE INDEX idx_personal_informations_4 ON public.personal_informations USING btree (item_class_code, ((json_data ->> 'birth_day'::text))) WHERE ((item_class_code)::text = 'birth_day'::text);
+
+
+--
+-- Name: idx_personal_informations_5; Type: INDEX; Schema: public; Owner: personal
+--
+
+CREATE INDEX idx_personal_informations_5 ON public.personal_informations USING btree (item_class_code, ((json_data ->> 'insurer'::text)), ((json_data ->> 'insured_mark'::text)), ((json_data ->> 'insured_number'::text))) WHERE ((item_class_code)::text = 'insured_information'::text);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

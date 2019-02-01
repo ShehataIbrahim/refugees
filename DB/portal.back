@@ -1,0 +1,645 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.1
+-- Dumped by pg_dump version 11.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: doctor_user; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.doctor_user (
+    doctor_id character varying(256) NOT NULL,
+    pass_hash character varying(128),
+    pass_salt character varying(128),
+    translate_lang_code character varying(10)
+);
+
+
+ALTER TABLE public.doctor_user OWNER TO dbadmin;
+
+--
+-- Name: nammin_answer; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.nammin_answer (
+    nammin_id integer,
+    nammin_q_id integer,
+    answer character varying(1024)
+);
+
+
+ALTER TABLE public.nammin_answer OWNER TO dbadmin;
+
+--
+-- Name: nammin_user; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.nammin_user (
+    nammin_id integer NOT NULL,
+    nammin_name character varying(256),
+    facebook_user_id character varying(64),
+    facebook_info text,
+    mail_address character varying(256),
+    pass_hash character varying(128),
+    pass_salt character varying(128),
+    translate_lang_code character varying(10),
+    last_screening_time timestamp without time zone,
+    last_screening_request_time timestamp without time zone
+);
+
+
+ALTER TABLE public.nammin_user OWNER TO dbadmin;
+
+--
+-- Name: nammin_user_nammin_id_seq; Type: SEQUENCE; Schema: public; Owner: dbadmin
+--
+
+CREATE SEQUENCE public.nammin_user_nammin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.nammin_user_nammin_id_seq OWNER TO dbadmin;
+
+--
+-- Name: nammin_user_nammin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbadmin
+--
+
+ALTER SEQUENCE public.nammin_user_nammin_id_seq OWNED BY public.nammin_user.nammin_id;
+
+
+--
+-- Name: screening; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.screening (
+    screening_id integer NOT NULL,
+    nammin_id integer,
+    answered_at timestamp without time zone DEFAULT now(),
+    status character varying(10)
+);
+
+
+ALTER TABLE public.screening OWNER TO dbadmin;
+
+--
+-- Name: screening_answer; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.screening_answer (
+    screening_id integer NOT NULL,
+    screening_q_id integer NOT NULL,
+    answer character varying(1024)
+);
+
+
+ALTER TABLE public.screening_answer OWNER TO dbadmin;
+
+--
+-- Name: screening_category; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.screening_category (
+    category_id integer NOT NULL,
+    category_name character varying(256)
+);
+
+
+ALTER TABLE public.screening_category OWNER TO dbadmin;
+
+--
+-- Name: screening_category_category_id_seq; Type: SEQUENCE; Schema: public; Owner: dbadmin
+--
+
+CREATE SEQUENCE public.screening_category_category_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.screening_category_category_id_seq OWNER TO dbadmin;
+
+--
+-- Name: screening_category_category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbadmin
+--
+
+ALTER SEQUENCE public.screening_category_category_id_seq OWNED BY public.screening_category.category_id;
+
+
+--
+-- Name: screening_q; Type: TABLE; Schema: public; Owner: dbadmin
+--
+
+CREATE TABLE public.screening_q (
+    screening_q_id integer NOT NULL,
+    category_id integer,
+    screening_q_text character varying(1000)
+);
+
+
+ALTER TABLE public.screening_q OWNER TO dbadmin;
+
+--
+-- Name: screening_q_screening_q_id_seq; Type: SEQUENCE; Schema: public; Owner: dbadmin
+--
+
+CREATE SEQUENCE public.screening_q_screening_q_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.screening_q_screening_q_id_seq OWNER TO dbadmin;
+
+--
+-- Name: screening_q_screening_q_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbadmin
+--
+
+ALTER SEQUENCE public.screening_q_screening_q_id_seq OWNED BY public.screening_q.screening_q_id;
+
+
+--
+-- Name: view_last_screening_answer; Type: VIEW; Schema: public; Owner: dbadmin
+--
+
+CREATE VIEW public.view_last_screening_answer WITH (security_barrier='false') AS
+ SELECT s.nammin_id,
+    sq.screening_q_id,
+    sa.answer,
+    sq.category_id,
+    sq.screening_q_text,
+    s.status
+   FROM ((public.screening s
+     LEFT JOIN public.screening_answer sa ON ((s.screening_id = sa.screening_id)))
+     LEFT JOIN public.screening_q sq ON ((sa.screening_q_id = sq.screening_q_id)))
+  WHERE ((s.nammin_id, sa.screening_q_id, sa.screening_id) IN ( SELECT s_1.nammin_id,
+            sa_1.screening_q_id,
+            max(s_1.screening_id) AS max_screening_id
+           FROM (public.screening s_1
+             LEFT JOIN public.screening_answer sa_1 ON ((s_1.screening_id = sa_1.screening_id)))
+          WHERE (sa_1.screening_id IS NOT NULL)
+          GROUP BY s_1.nammin_id, sa_1.screening_q_id));
+
+
+ALTER TABLE public.view_last_screening_answer OWNER TO dbadmin;
+
+--
+-- Name: screening_result; Type: VIEW; Schema: public; Owner: dbadmin
+--
+
+CREATE VIEW public.screening_result AS
+ SELECT t.nammin_id,
+    t.category_id,
+        CASE
+            WHEN (t.nocount = 0) THEN '0'::text
+            WHEN (t.nocount = 1) THEN '1'::text
+            ELSE '2'::text
+        END AS result
+   FROM ( SELECT v.nammin_id,
+            v.category_id,
+            sum(v.isno) AS nocount
+           FROM ( SELECT view_last_screening_answer.nammin_id,
+                    view_last_screening_answer.screening_q_id,
+                        CASE
+                            WHEN ((view_last_screening_answer.answer)::text = '2'::text) THEN 1
+                            ELSE 0
+                        END AS isno,
+                    view_last_screening_answer.category_id
+                   FROM public.view_last_screening_answer
+                  WHERE (NOT (view_last_screening_answer.screening_q_id = ANY (ARRAY[5, 6, 11])))) v
+          GROUP BY v.nammin_id, v.category_id) t;
+
+
+ALTER TABLE public.screening_result OWNER TO dbadmin;
+
+--
+-- Name: screening_screening_id_seq; Type: SEQUENCE; Schema: public; Owner: dbadmin
+--
+
+CREATE SEQUENCE public.screening_screening_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.screening_screening_id_seq OWNER TO dbadmin;
+
+--
+-- Name: screening_screening_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dbadmin
+--
+
+ALTER SEQUENCE public.screening_screening_id_seq OWNED BY public.screening.screening_id;
+
+
+--
+-- Name: nammin_user nammin_id; Type: DEFAULT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.nammin_user ALTER COLUMN nammin_id SET DEFAULT nextval('public.nammin_user_nammin_id_seq'::regclass);
+
+
+--
+-- Name: screening screening_id; Type: DEFAULT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening ALTER COLUMN screening_id SET DEFAULT nextval('public.screening_screening_id_seq'::regclass);
+
+
+--
+-- Name: screening_category category_id; Type: DEFAULT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_category ALTER COLUMN category_id SET DEFAULT nextval('public.screening_category_category_id_seq'::regclass);
+
+
+--
+-- Name: screening_q screening_q_id; Type: DEFAULT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_q ALTER COLUMN screening_q_id SET DEFAULT nextval('public.screening_q_screening_q_id_seq'::regclass);
+
+
+--
+-- Data for Name: doctor_user; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.doctor_user (doctor_id, pass_hash, pass_salt, translate_lang_code) FROM stdin;
+doctor-ja	c9dbe061f6c5d6704aa3c84ff7b40637f0bffc3351c49d4e99d860c9b032b7bb20b914684e409a34aad4c8efa0a5fe9c8fb5a17087396f68b45aa99f74475df0	ebc2b06337ad7eaaa474938f0c9f64efe3b9dbf8ddd8b72cd9832eb6fb7bd68169754ddcf04160c407d53b3cfb3249e0420fb1c8a1fcbf1d900f39accb7f84d9	ja
+doctor-ar	f0cffdc6dd2e8a610ea0eb6675fdf07713f8d0cbe3644b4760176db64ea47d6b252c046056fd83618ad94ba104d8cabcf0ad1780bd60b8a8a8de3d16e8d4dd65	acd76d226497bbbe13d5ebb6b4645a1a3600df21247b38bbc6c80f856a694d2565d81dd1f2f2b1a1986aaac23a7cc04a6a5f4844ce9a600c59fa6f125a9a18c4	ar
+doctor-en	a29df15be6eb64e6740bc75183057cbeff9785c0b2fb9750731a383d6281b1fa68545a6802d33983ce761cb08de4ed333efc80edfe20d8516cd58762fa79f43f	fc555409abb77e7d00e451444b43dc208515161fdc4673097b0552e3b6133a75d74eef41d9ec1f93ebfeb5a4dc83ca740327d1356c6701adc37e0beceb610f1b	en
+\.
+
+
+--
+-- Data for Name: nammin_answer; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.nammin_answer (nammin_id, nammin_q_id, answer) FROM stdin;
+4	11	
+4	12	0
+4	13	0
+4	14	1
+4	15	1
+4	16	0
+4	17	1
+4	18	0
+4	19	1
+4	1	0
+4	2	1
+4	3	1
+4	4	123
+4	5	123
+4	6	0
+4	7	1
+4	8	123
+4	9	1
+4	10	0
+\.
+
+
+--
+-- Data for Name: nammin_user; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.nammin_user (nammin_id, nammin_name, facebook_user_id, facebook_info, mail_address, pass_hash, pass_salt, translate_lang_code, last_screening_time, last_screening_request_time) FROM stdin;
+3	عائشة	1203621803074308	{"room":"2024776347760387","user":{"id":"1203621803074308","first_name":"Taro","last_name":"Arab","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?_nc_cat=0&oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"ar_AR","timezone":9,"gender":"male","name":"Taro","room":"2024776347760387"},"message":{"user":{"id":"1203621803074308","first_name":"Taro","last_name":"Arab","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?_nc_cat=0&oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"ar_AR","timezone":9,"gender":"male","name":"Taro","room":"2024776347760387"},"text":"HIHP1920","id":"mid.$cAAdrfRmMpPZogx3GsliUdh8-ZqIe","done":false,"room":"2024776347760387"}}	arab@a.com	e6369695ad8aa9454aa660dd353356fff7375ec0ca21acc3d72aa69b082b98e840bdd770a10d0f11be29ada94d4ac8ec4b6cb39de0ad035897fd0d8c48c6f908	c441ad05803f8ad27ea76d793e181a97eb533c01ea4002f3cc0e63205ccb445e0b9d32511fc28af04bb25d6c97ab21fa6ddc0f54c90ea85c59d9a18bfd751484	ar	2018-03-23 09:11:37.817996	2018-03-23 09:20:00.171779
+2	日立太郎	1920080311396492	{"room":"2024776347760387","user":{"id":"1920080311396492","first_name":"太郎","last_name":"日立","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?_nc_cat=0&oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"ja_JP","timezone":9,"gender":"male","name":"太郎","room":"2024776347760387"},"message":{"user":{"id":"1920080311396492","first_name":"太郎","last_name":"日立","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?_nc_cat=0&oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"ja_JP","timezone":9,"gender":"male","name":"太郎","room":"2024776347760387"},"text":"HIHP1920","id":"mid.$cAAdrfRjBERZogx03F1iUdftFE4l1","done":false,"room":"2024776347760387"}}	hitachi@h.com	e6369695ad8aa9454aa660dd353356fff7375ec0ca21acc3d72aa69b082b98e840bdd770a10d0f11be29ada94d4ac8ec4b6cb39de0ad035897fd0d8c48c6f908	c441ad05803f8ad27ea76d793e181a97eb533c01ea4002f3cc0e63205ccb445e0b9d32511fc28af04bb25d6c97ab21fa6ddc0f54c90ea85c59d9a18bfd751484	ja	2018-03-23 09:11:43.319972	2018-03-23 09:20:00.171779
+1	Mark Johnson	1617083851746175	{"room":"2024776347760387","user":{"id":"1617083851746175","first_name":"Johnson","last_name":"Mark","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"en_US","timezone":9,"gender":"male","name":"Johnson","room":"2024776347760387"},"message":{"user":{"id":"1617083851746175","first_name":"Johnson","last_name":"Mark","profile_pic":"https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?oh=74ea5c45acdd5e6b143699d45c15d951&oe=5B2D448B","locale":"en_US","timezone":9,"gender":"male","name":"Johnson","room":"2024776347760387"},"text":"HIHP1920","id":"mid.$cAAdrfSSwBBRogx2MPliUdhCXGRVf","done":false,"room":"2024776347760387"}}	mark@h.com	e6369695ad8aa9454aa660dd353356fff7375ec0ca21acc3d72aa69b082b98e840bdd770a10d0f11be29ada94d4ac8ec4b6cb39de0ad035897fd0d8c48c6f908	c441ad05803f8ad27ea76d793e181a97eb533c01ea4002f3cc0e63205ccb445e0b9d32511fc28af04bb25d6c97ab21fa6ddc0f54c90ea85c59d9a18bfd751484	en	2018-03-23 09:11:35.250524	2018-03-23 09:20:00.171779
+4	shehata	\N	\N	shehata.ibrahim@ihorizons.com	a437fc3572e50bf1c858df2cd7b46e0e34acc8ebd625082461b4088ea90210bb1b32c29b4c170a8b506d581185093989070eda90e685421aa5b804d779615336	31e9257d4488742f656807c2e733d081075a1256758e9fd5f0f96d44909c66181e8dc56070f54ffbbaba5b5a75e81888e86984fa0f21741ca1244d23862badfa	\N	\N	\N
+5	amer	\N	\N	amer@amer	0bb712ff73c23dc14fddf03dbee5ab94b7ecef4fbe0894c236f06a96c07af11ded474004af898f3decded249cf67168fcd50f925bf1c0242df5aadfb820add0f	85a4bd1268216bc6ee989d313bcc126f2eb25daef6f3e060458fb73d558f467703d32ba3981b4382eb708d0ef2a42b8d71a1dd5efedb979e0ff9b59620756f28	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: screening; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.screening (screening_id, nammin_id, answered_at, status) FROM stdin;
+0	4	2019-02-01 17:10:24.832739	INITIAL
+\.
+
+
+--
+-- Data for Name: screening_answer; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.screening_answer (screening_id, screening_q_id, answer) FROM stdin;
+0	11	
+0	12	0
+0	13	0
+0	14	1
+0	15	1
+0	16	0
+0	17	1
+0	18	0
+0	19	1
+0	1	0
+0	2	1
+0	3	1
+0	4	123
+0	5	123
+0	6	0
+0	7	1
+0	8	123
+0	9	1
+0	10	0
+\.
+
+
+--
+-- Data for Name: screening_category; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.screening_category (category_id, category_name) FROM stdin;
+3	COPD
+1	InitialHealthCheck
+2	InternalMedicine
+4	RespiratorMedicine
+5	Diabetes
+\.
+
+
+--
+-- Data for Name: screening_q; Type: TABLE DATA; Schema: public; Owner: dbadmin
+--
+
+COPY public.screening_q (screening_q_id, category_id, screening_q_text) FROM stdin;
+1	1	Q1
+2	1	Q2
+3	1	Q3
+4	2	Q4
+5	2	Q5
+6	2	Q6
+7	2	Q7
+8	2	Q8
+9	2	Q9
+10	2	Q10
+11	3	Q11
+12	3	Q12
+13	3	Q13
+14	4	Q14
+15	4	Q15
+16	4	Q16
+17	5	Q17
+18	5	Q18
+19	5	Q19
+\.
+
+
+--
+-- Name: nammin_user_nammin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbadmin
+--
+
+SELECT pg_catalog.setval('public.nammin_user_nammin_id_seq', 3, true);
+
+
+--
+-- Name: screening_category_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbadmin
+--
+
+SELECT pg_catalog.setval('public.screening_category_category_id_seq', 5, true);
+
+
+--
+-- Name: screening_q_screening_q_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbadmin
+--
+
+SELECT pg_catalog.setval('public.screening_q_screening_q_id_seq', 19, true);
+
+
+--
+-- Name: screening_screening_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dbadmin
+--
+
+SELECT pg_catalog.setval('public.screening_screening_id_seq', 7, true);
+
+
+--
+-- Name: doctor_user doctor_user_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.doctor_user
+    ADD CONSTRAINT doctor_user_pkey PRIMARY KEY (doctor_id);
+
+
+--
+-- Name: nammin_answer nammin_answer_nammin_id_nammin_q_id_key; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.nammin_answer
+    ADD CONSTRAINT nammin_answer_nammin_id_nammin_q_id_key UNIQUE (nammin_id, nammin_q_id);
+
+
+--
+-- Name: nammin_user nammin_user_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.nammin_user
+    ADD CONSTRAINT nammin_user_pkey PRIMARY KEY (nammin_id);
+
+
+--
+-- Name: screening_answer screening_answer_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_answer
+    ADD CONSTRAINT screening_answer_pkey PRIMARY KEY (screening_id, screening_q_id);
+
+
+--
+-- Name: screening_category screening_category_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_category
+    ADD CONSTRAINT screening_category_pkey PRIMARY KEY (category_id);
+
+
+--
+-- Name: screening screening_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening
+    ADD CONSTRAINT screening_pkey PRIMARY KEY (screening_id);
+
+
+--
+-- Name: screening_q screening_q_pkey; Type: CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_q
+    ADD CONSTRAINT screening_q_pkey PRIMARY KEY (screening_q_id);
+
+
+--
+-- Name: nammin_answer nammin_answer_nammin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.nammin_answer
+    ADD CONSTRAINT nammin_answer_nammin_id_fkey FOREIGN KEY (nammin_id) REFERENCES public.nammin_user(nammin_id);
+
+
+--
+-- Name: screening_answer screening_answer_screening_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_answer
+    ADD CONSTRAINT screening_answer_screening_id_fkey FOREIGN KEY (screening_id) REFERENCES public.screening(screening_id);
+
+
+--
+-- Name: screening_answer screening_answer_screening_q_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_answer
+    ADD CONSTRAINT screening_answer_screening_q_id_fkey FOREIGN KEY (screening_q_id) REFERENCES public.screening_q(screening_q_id);
+
+
+--
+-- Name: screening screening_nammin_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening
+    ADD CONSTRAINT screening_nammin_id_fkey FOREIGN KEY (nammin_id) REFERENCES public.nammin_user(nammin_id);
+
+
+--
+-- Name: screening_q screening_q_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dbadmin
+--
+
+ALTER TABLE ONLY public.screening_q
+    ADD CONSTRAINT screening_q_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.screening_category(category_id);
+
+
+--
+-- Name: TABLE doctor_user; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.doctor_user TO node;
+GRANT ALL ON TABLE public.doctor_user TO fbbotuser;
+
+
+--
+-- Name: TABLE nammin_answer; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.nammin_answer TO node;
+GRANT ALL ON TABLE public.nammin_answer TO fbbotuser;
+
+
+--
+-- Name: TABLE nammin_user; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.nammin_user TO node;
+GRANT ALL ON TABLE public.nammin_user TO fbbotuser;
+
+
+--
+-- Name: SEQUENCE nammin_user_nammin_id_seq; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON SEQUENCE public.nammin_user_nammin_id_seq TO node;
+GRANT ALL ON SEQUENCE public.nammin_user_nammin_id_seq TO fbbotuser;
+
+
+--
+-- Name: TABLE screening; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.screening TO node;
+GRANT ALL ON TABLE public.screening TO fbbotuser;
+
+
+--
+-- Name: TABLE screening_answer; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.screening_answer TO node;
+GRANT ALL ON TABLE public.screening_answer TO fbbotuser;
+
+
+--
+-- Name: TABLE screening_category; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.screening_category TO node;
+GRANT ALL ON TABLE public.screening_category TO fbbotuser;
+
+
+--
+-- Name: SEQUENCE screening_category_category_id_seq; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON SEQUENCE public.screening_category_category_id_seq TO node;
+GRANT ALL ON SEQUENCE public.screening_category_category_id_seq TO fbbotuser;
+
+
+--
+-- Name: TABLE screening_q; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.screening_q TO node;
+GRANT ALL ON TABLE public.screening_q TO fbbotuser;
+
+
+--
+-- Name: SEQUENCE screening_q_screening_q_id_seq; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON SEQUENCE public.screening_q_screening_q_id_seq TO node;
+GRANT ALL ON SEQUENCE public.screening_q_screening_q_id_seq TO fbbotuser;
+
+
+--
+-- Name: TABLE view_last_screening_answer; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.view_last_screening_answer TO node;
+GRANT ALL ON TABLE public.view_last_screening_answer TO fbbotuser;
+
+
+--
+-- Name: TABLE screening_result; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON TABLE public.screening_result TO node;
+GRANT ALL ON TABLE public.screening_result TO fbbotuser;
+
+
+--
+-- Name: SEQUENCE screening_screening_id_seq; Type: ACL; Schema: public; Owner: dbadmin
+--
+
+GRANT ALL ON SEQUENCE public.screening_screening_id_seq TO node;
+GRANT ALL ON SEQUENCE public.screening_screening_id_seq TO fbbotuser;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

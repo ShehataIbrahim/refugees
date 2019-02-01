@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('እባክዎ በ Messenger ውስጥ የህክምና መረጃ ያግኙ. ቀድሞውኑ ቃለ-መጠይቅ ከተደረገ እባክዎ እንደገና ይጫኑ.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

@@ -19,6 +19,7 @@ import com.refugees.db.service.RefugeeUserService;
 
 import net.arnx.jsonic.JSON;
 import net.hitachifbbot.DB;
+import net.hitachifbbot.model.NamminUserData;
 import net.hitachifbbot.servlet.AppServlet;
 import net.hitachifbbot.session.AppSession;
 
@@ -44,8 +45,15 @@ public class UserHomeServlet extends AppServlet {
 		try {
 			request.setAttribute("categories", CategoryService.getCategoryQuestions());
 			RefugeeUser user = (RefugeeUser) request.getSession().getAttribute("userData");
-			
-			ArrayList<DB.NamminAnswer> answer = DB.getNamminAnswer(user.getUserId());
+			if(user==null)
+			{
+				NamminUserData u = AppSession.getNamminUserData(request);
+				if(u instanceof RefugeeUser)
+					user=(RefugeeUser)u ;
+				else
+					user=RefugeeUser.build(u);
+			}
+			ArrayList<DB.NamminAnswer> answer = RefugeeUserService.getUserAnswers(user.getUserId());
 			HashMap<String, String> answers = new HashMap<>();
 			for (DB.NamminAnswer a : answer) {
 				answers.put("" + a.namminQID, a.answer);
@@ -68,7 +76,7 @@ public class UserHomeServlet extends AppServlet {
 		HashMap<Integer, DB.NamminAnswer> answersMap = new HashMap<>();
 		ArrayList<DB.NamminAnswer> answers=null;
 		try {
-			answers = DB.getNamminAnswer(user.getUserId());
+			answers = RefugeeUserService.getUserAnswers(user.getUserId());
 			for (DB.NamminAnswer ans : answers)
 				answersMap.put(ans.namminQID, ans);
 		} catch (SQLException e) {
@@ -96,7 +104,7 @@ public class UserHomeServlet extends AppServlet {
 			}
 		}
 //		RefugeeUserService.bulkUpdate(answers);
-		RefugeeUserService.bulkInsert(newAnswers);
+		RefugeeUserService.bulkInsert(newAnswers,user.getUserId());
 		response.setContentType("application/json");
 		String result="{\"success\":true,\"message\":\"Data reflected successfuly\"}";
 		response.getWriter().print(result);

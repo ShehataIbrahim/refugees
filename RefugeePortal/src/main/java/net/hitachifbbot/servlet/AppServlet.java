@@ -1,5 +1,6 @@
 package net.hitachifbbot.servlet;
 
+import net.hitachifbbot.model.NamminUserData;
 import net.hitachifbbot.session.AppSession;
 
 import javax.servlet.ServletException;
@@ -30,9 +31,9 @@ public class AppServlet extends HttpServlet {
 
     protected void forwardJSP(String pageName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(pageName.startsWith("/nammin/")){ // 難民申請時は言語コードによって遷移先を変える
-            AppSession.NamminUserData data = AppSession.getNamminUserData(req);
+            NamminUserData data = AppSession.getNamminUserData(req);
             if (data != null){
-                String langCode = data.dbUserData.translateLangCode;
+                String langCode = data.getDbUserData().translateLangCode;
                 if(!getConvertedLangCodes(req).contains(langCode)){
                     langCode = "en";
                 }

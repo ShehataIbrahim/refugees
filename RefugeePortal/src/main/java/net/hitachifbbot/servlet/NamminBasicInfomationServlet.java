@@ -18,7 +18,7 @@ public class NamminBasicInfomationServlet extends AppServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            ArrayList<DB.NamminAnswer> answer = DB.getNamminAnswer(AppSession.getNamminUserData(req).dbUserData.namminID);
+            ArrayList<DB.NamminAnswer> answer = DB.getNamminAnswer(AppSession.getNamminUserData(req).getDbUserData().namminID);
             HashMap<String, String> answers = new HashMap<>();
             for(DB.NamminAnswer a : answer){
                 answers.put("" + a.namminQID, a.answer);

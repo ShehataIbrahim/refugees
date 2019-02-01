@@ -1,5 +1,6 @@
 package net.hitachifbbot;
 
+import net.hitachifbbot.model.DoctorUser;
 import net.hitachifbbot.utils.DBUtils;
 
 import java.sql.ResultSet;
@@ -36,6 +37,19 @@ public class DB {
                 });
     }
 
+    public static ArrayList<NamminAnswer> getUserAnswers(int namminID) throws SQLException {
+        return DBUtils.preparedStatement("select sc.nammin_id, ans.screening_q_id nammin_q_id, ans.answer ,question.screening_q_text from (screening sc inner join screening_answer ans on sc.screening_id = ans.screening_id) inner join screening_q question on ans.screening_q_id= question.screening_q_id WHERE nammin_id = ?",
+                ps -> {
+                    ps.setInt(1, namminID);
+                },
+                r -> {
+                    ArrayList<NamminAnswer> result = new ArrayList<>();
+                    while (r.next()) {
+                        result.add(NamminAnswer.getFromResultSet(r));
+                    }
+                    return result;
+                });
+    }
     public static ArrayList<ScreeningResultSet> getLastScreeningAnswer(int namminID) throws SQLException {
         return DBUtils.preparedStatement("SELECT screening_q_id,answer,category_id,screening_q_text FROM view_last_screening_answer " +
                         "WHERE nammin_id = ?",
@@ -114,83 +128,9 @@ public class DB {
         }
     }
 
-    public static class DoctorUser{
-        /*
-    doctor_id VARCHAR(256) PRIMARY KEY,
-    pass_hash VARCHAR(128),
-    pass_salt VARCHAR(128),
-    translate_lang_code VARCHAR(10)
-         */
-        public String doctorID;
-        public String passHash;
-        public String passSalt;
-        public String translateLangCode;
+ 
 
-        public DoctorUser(String doctorID, String passHash, String passSalt, String translateLangCode) {
-            this.doctorID = doctorID;
-            this.translateLangCode = translateLangCode;
-            this.passHash = passHash;
-            this.passSalt = passSalt;
-        }
-
-        public static DoctorUser getFromResultSet(ResultSet r) throws SQLException {
-            return new DoctorUser(
-                    r.getString("doctor_id"),
-                    r.getString("pass_hash"),
-                    r.getString("pass_salt"),
-                    r.getString("translate_lang_code")
-            );
-        }
-    }
-
-    public static class NamminUser{
-        /*
-    nammin_id                   SERIAL PRIMARY KEY,
-    nammin_name                 VARCHAR(256),
-    facebook_info               TEXT,
-    mail_address                VARCHAR(256),
-    pass_hash                   VARCHAR(128),
-    pass_salt                   VARCHAR(128),
-    translate_lang_code         VARCHAR(10),
-    last_screening_time         DATE,
-    last_screening_request_time DATE
-        */
-        public int namminID;
-        public String namminName;
-        public String facebookInfo;
-        public String mailAddress;
-        public String passHash;
-        public String passSalt;
-        public String translateLangCode;
-        public Date lastScreeningTime;
-        public Date lastScreeningRequestTime;
-
-        public NamminUser(int namminID, String namminName, String facebookInfo, String mailAddress, String passHash, String passSalt, String translateLangCode, Date lastScreeningTime, Date lastScreeningRequestTime) {
-            this.namminID = namminID;
-            this.namminName = namminName;
-            this.facebookInfo = facebookInfo;
-            this.mailAddress = mailAddress;
-            this.passHash = passHash;
-            this.passSalt = passSalt;
-            this.translateLangCode = translateLangCode;
-            this.lastScreeningTime = lastScreeningTime;
-            this.lastScreeningRequestTime = lastScreeningRequestTime;
-        }
-
-        public static NamminUser getFromResultSet(ResultSet r) throws SQLException {
-            return new NamminUser(
-                    r.getInt("nammin_id"),
-                    r.getString("nammin_name"),
-                    r.getString("facebook_info"),
-                    r.getString("mail_address"),
-                    r.getString("pass_hash"),
-                    r.getString("pass_salt"),
-                    r.getString("translate_lang_code"),
-                    r.getTimestamp("last_screening_time"),
-                    r.getTimestamp("last_screening_request_time")
-            );
-        }
-    }
+    
 
 
     public static class ScreeningAnswer{

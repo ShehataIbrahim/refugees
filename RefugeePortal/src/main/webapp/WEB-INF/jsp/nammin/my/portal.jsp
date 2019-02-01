@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('အဆိုပါ Messenger ကိုအတွက်အင်တာဗျူးအပေါ်တုံ့ပြန်ခုနှစ်တွင်ပါ။ အင်တာဗျူးဖို့တုန့်ပြန်လျှင်ပြီးသား re-ကိုဖတ်ရှုကြပါ။')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

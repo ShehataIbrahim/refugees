@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('مهرباني وکړئ د رسول په اړه طبي تحقیقات ترلاسه کړئ. که تاسو دمخه مرکه کړې وي نو مهرباني وکړئ بیا رالوی کړئ.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

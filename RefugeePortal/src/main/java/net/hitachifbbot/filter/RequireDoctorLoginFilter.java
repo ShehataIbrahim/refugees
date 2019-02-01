@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.hitachifbbot.Consts;
+import net.hitachifbbot.model.DoctorUserData;
 import net.hitachifbbot.session.AppSession;
 
 public class RequireDoctorLoginFilter extends HTTPServletFilter {
@@ -19,7 +20,7 @@ public class RequireDoctorLoginFilter extends HTTPServletFilter {
 
 	@Override
 	protected boolean doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		boolean result = AppSession.getUserData(request) instanceof AppSession.DoctorUserData;
+		boolean result = AppSession.getUserData(request) instanceof DoctorUserData;
 		if(!result){
 			response.sendRedirect(Consts.LOGIN_DOCTOR_SERVLET_URL);
 		}

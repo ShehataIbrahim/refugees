@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('దయచేసి మెసెంజర్లో వైద్య విచారణలను పొందండి. మీరు ఇంతకు ముందు ఇంటర్వ్యూ చేస్తే దయచేసి రీలోడ్ చేయండి.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

@@ -92,7 +92,7 @@
 	<!-- 問診詳細画面 -->
 	<servlet>
 		<servlet-name>ScreeningDetailServlet</servlet-name>
-		<servlet-class>net.hitachifbbot.servlet.ScreeningDetailServlet</servlet-class>
+		<servlet-class>com.refugees.servlets.doctor.ScreeningDetailServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ScreeningDetailServlet</servlet-name>
@@ -209,7 +209,7 @@
 	</filter-mapping>
 	<!-- 難民ログインが必要なパターン -->
 	<filter-mapping>
-		<filter-name>RequireNamminLoginFilter</filter-name>
+		<filter-name>newUserSecurityFilter</filter-name>
 		<url-pattern>/nammin/*</url-pattern>
 	</filter-mapping>
 
@@ -236,24 +236,6 @@
 	<session-config>
 		<session-timeout>4320</session-timeout>
 	</session-config>
-
-	<!-- エラーページの設定 -->
-	<error-page>
-		<error-code>401</error-code>
-		<location>/error.html</location>
-	</error-page>
-	<error-page>
-		<error-code>403</error-code>
-		<location>/error.html</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/error.html</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/error.html</location>
-	</error-page>
 
 	<!-- DB接続設定 -->
 	<resource-ref>

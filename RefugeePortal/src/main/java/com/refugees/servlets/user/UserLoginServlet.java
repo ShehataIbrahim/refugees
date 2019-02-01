@@ -20,6 +20,7 @@ import com.refugees.db.service.RefugeeUserService;
 import net.hitachifbbot.Consts;
 import net.hitachifbbot.model.PasswordHash;
 import net.hitachifbbot.servlet.AppServlet;
+import net.hitachifbbot.session.AppSession;
 
 /**
  * Servlet implementation class UserLogin
@@ -43,7 +44,7 @@ public class UserLoginServlet extends AppServlet {
 		if (Validator.validateSession(request)) {
 			response.sendRedirect(Consts.USER_HOME_SERVLET_URL);
 		} else
-			forwardJSP("/user/login.jsp", request, response);
+			forwardJSP("/login/userLogin.jsp", request, response);
 	}
 
 	/**
@@ -53,36 +54,38 @@ public class UserLoginServlet extends AppServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		//get user data
-		String username = request.getParameter("username");
+		String username = request.getParameter("user");
 		String password = request.getParameter("password");
 		//data validations
 		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-			forwardJSPWithError("/user/login.jsp", request, response,"login.emptydata");
+			forwardJSPWithError("/login/userLogin.jsp", request, response,"login.emptydata");
 		}
 		//try to load user info
 		RefugeeUser user = RefugeeUserService.findUserByEmail(username);
 		if (user == null) {
-			forwardJSPWithError("/user/login.jsp", request, response,"login.invaliddata");
+			forwardJSPWithError("/login/userLogin.jsp", request, response,"login.invaliddata");
 		} else {
 			try {
 				PasswordHash hash = new PasswordHash(user.getPassword(), user.getPasswordSalt());
 
 				if (hash.isMatch(password)) {
-					HttpSession userSession = request.getSession(true);
+					user.getDBUserData();
+					HttpSession userSession = request.getSession();
 					userSession.setAttribute("userData", user);
-					response.sendRedirect(Consts.USER_HOME_SERVLET_URL);
+					response.sendRedirect(Consts.NAMMIN_PORTAL_SERVLET_URL);//USER_HOME_SERVLET_URL);
+					AppSession.setUserData(request, user);
 
 				}else
-					forwardJSPWithError("/user/login.jsp", request, response,"login.invaliddata");
+					forwardJSPWithError("/login/userLogin.jsp", request, response,"login.invaliddata");
 			} catch (Exception e) {
 				log("Error user login", e);
-				forwardJSPWithError("/user/login.jsp", request, response,"login.general_error");
+				forwardJSPWithError("/login/userLogin.jsp", request, response,"login.general_error");
 			}
 		}
 	}
 	private void forwardJSPWithError(String jsp,HttpServletRequest request,HttpServletResponse response, String messageCode) throws ServletException, IOException
 	{
 		request.setAttribute("errorMessage", messageCode);
-		forwardJSP("/user/login.jsp", request, response);
+		forwardJSP("/login/userLogin.jsp", request, response);
 	}
 }

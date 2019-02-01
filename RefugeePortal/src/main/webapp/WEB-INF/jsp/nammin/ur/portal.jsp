@@ -43,7 +43,7 @@
         <% if(request.getAttribute("noScreening") != null){ %>
         <a href="javascript:alert('رسول صلی اللہ علیہ وسلم کی طبی تحقیقات کریں. اگر آپ پہلے ہی انٹرویو ہو چکے ہیں تو براہ کرم دوبارہ لوڈ کریں.')" class="menu-btn">
         <% }else{ %>
-        <a href="/nammin/screening" class="menu-btn">
+       <a href="/user/authenticated/home" class="menu-btn">
         <% } %>
             <div class="menu-btn-inner btn-02"><p>Interview</p></div>
         </a>

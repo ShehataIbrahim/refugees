@@ -1,6 +1,8 @@
 package net.hitachifbbot.session;
 
 import net.hitachifbbot.DB;
+import net.hitachifbbot.model.DoctorUserData;
+import net.hitachifbbot.model.NamminUserData;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -111,14 +113,9 @@ public class AppSession {
 	/**
 	 * 難民ユーザー
 	 */
-	public static class NamminUserData extends UserData{
-		public DB.NamminUser dbUserData;
-	}
-
+	
 	/**
 	 * 医師ユーザー
 	 */
-	public static class DoctorUserData extends UserData{
-		public DB.DoctorUser dbUserData;
-	}
+	
 }
