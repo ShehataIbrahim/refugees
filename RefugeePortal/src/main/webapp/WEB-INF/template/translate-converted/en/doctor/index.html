@@ -49,5 +49,17 @@
             form_logout.submit();
         }
     }
+    function confirm(caller)
+    {
+    	var id=$(caller).attr('id');
+    	$.ajax({
+    		type : "POST",
+    		url : '/doctor/confirm?id='+id,
+    		
+    		success : function(data) {
+    			location.replace(location.pathname);
+    		}
+    	});
+    }
 </script>
 </html>

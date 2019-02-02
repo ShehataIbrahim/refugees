@@ -33,7 +33,7 @@ public class DoctorScreeningListServlet extends AppServlet {
                             "from nammin_user as nu " +
                             "join screening_result as sr on sr.nammin_id = nu.nammin_id " +
                             "join " +
-                            "  (SELECT nammin_id,max(screening_id) as screening_id,max(answered_at) as answered_at from screening group by nammin_id ) as temp1 " +
+                            "  (SELECT nammin_id,max(screening_id) as screening_id,max(answered_at) as answered_at from screening where status='INITIAL' group by nammin_id ) as temp1 " +
                             "    on temp1.nammin_id = nu.nammin_id " +
                             "where sr.category_id = ? " +
                             " order by temp1.answered_at desc;", // 選択されたカテゴリの問診結果を取得する

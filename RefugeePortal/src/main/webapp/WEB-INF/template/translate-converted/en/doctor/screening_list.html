@@ -16,15 +16,14 @@
         <th>Interview Result</th>
     </tr>
     <tr th:each="r : ${resultList}">
-        <td th:text="${r.answeredAt}">2018/02/20</td>
-        <td th:text="${r.namminID}">501</td>
-        <td th:text="${r.namminName}">Mark Jhonson</td>
+        <td th:text="${r.answeredAt}"></td>
+        <td th:text="${r.namminID}"></td>
+        <td th:text="${r.namminName}"></td>
         <td class="interview-result" th:switch="${r.result}">
-            <a th:case="0" th:href="@{screening_detail(s_id=${r.screeningID},c_id=${categoryID},n_id=${r.namminID})}">✕To confirm</a>
-            <!--/*/
-            <a th:case="1" th:href="@{screening_detail(s_id=${r.screeningID},c_id=${categoryID},n_id=${r.namminID})}">△pay attention</a>
-            <a th:case="2" th:href="@{screening_detail(s_id=${r.screeningID},c_id=${categoryID},n_id=${r.namminID})}">〇no problem</a>
-            /*/-->
+        <div th:case="0" style="width: 300px;">
+        	<a th:id="${r.screeningID}" style="width: 60%;float: left;"  href="#" onclick="confirm(this)">Confirm this</a>
+            <a style="width: 35%;float: right;" th:href="@{screening_detail(s_id=${r.screeningID},c_id=${categoryID},n_id=${r.namminID})}">View</a>
+            </div>
         </td>
     </tr>
 </table>

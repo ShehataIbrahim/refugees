@@ -1,5 +1,10 @@
 package com.refugees.db.service;
 
+import java.sql.Connection;
+import java.sql.Statement;
+
+import com.refugees.db.config.HibernateConfigurator;
+
 import net.hitachifbbot.utils.DBUtils;
 
 public class ScreeningService {
@@ -19,6 +24,31 @@ public class ScreeningService {
 					});
 		} catch (Exception e) {
 			return false;
+		}
+	}
+
+	public static void confirmScreen(String screenId) {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = HibernateConfigurator.getConnection();
+			stmt = conn.createStatement();
+			stmt.execute("update screening set status='CONFIRMED' WHERE screening_id=" + screenId);
+			conn.commit();
+		} catch (Exception e) {
+		} finally {
+			if (stmt != null)
+				try {
+					stmt.close();
+				} catch (Exception e) {
+
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (Exception e) {
+
+				}
 		}
 	}
 }

@@ -88,7 +88,14 @@
 		<servlet-name>DoctorScreeningListServlet</servlet-name>
 		<url-pattern>/doctor/screening_list.html</url-pattern>
 	</servlet-mapping>
-
+	<servlet>
+		<servlet-name>DoctorScreeningConfirmationServlet</servlet-name>
+		<servlet-class>com.refugees.servlets.doctor.ScreenConfirmationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DoctorScreeningConfirmationServlet</servlet-name>
+		<url-pattern>/doctor/confirm</url-pattern>
+	</servlet-mapping>
 	<!-- 問診詳細画面 -->
 	<servlet>
 		<servlet-name>ScreeningDetailServlet</servlet-name>
@@ -173,7 +180,7 @@
 	<servlet-mapping>
 		<servlet-name>userRegisterationServlet</servlet-name>
 		<url-pattern>/user/register</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>userHomeServlet</servlet-name>
 		<servlet-class>com.refugees.servlets.user.UserHomeServlet</servlet-class>
@@ -244,6 +251,6 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	<welcome-file-list>
-	<welcome-file>welcome.html</welcome-file>
+		<welcome-file>welcome.html</welcome-file>
 	</welcome-file-list>
 </web-app>
