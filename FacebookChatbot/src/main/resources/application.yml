@@ -3,12 +3,23 @@ fb:
   appSecret:  616184c44f761f5499b2ee8048c6ef86
   verifyToken : AQIC5wM2LY4Sfcxm7uOcT8A6sQheqWcY19Py3BPRWvMAAJTSQACMDEAAlNLABQtNjQ1NDA3MDA2MzE0MzU5ODEyMg
   pageAccessToken: EAAd4oZBaNRNsBALVfOBPrWYSETrcxcZAqM9mzsKhybrT6K91J0d1lRsGEmDYo1FQw8eYlYqy8fvQ1mzGnhb7xifZBnprvWH7Jt3xZA3ZBOvDsLdXX4SI00NMKIIwAjgMsKJpSbHmSeNbwUZCAZCmOQJEJhZAstXCUdVglsPFMD521wZDZD
-
+  random.key: 616184c44f761f5499b2ee8048c6ef86
 logging:
   level:
     com:
       github:
-        messenger4j: DEBUG        
+        messenger4j: DEBUG
+      org:
+        hibernate:
+          SQL:  DEBUG
 questions:
   properties:
     file: /app/config/questions.properties
+spring:
+  datasource:
+    jndi-name:  java:/jdbc/portal
+    driver-class-name:  org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate.dialect:  org.hibernate.dialect.PostgreSQL95Dialect
+    show-sql: true
