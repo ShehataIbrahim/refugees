@@ -40,6 +40,7 @@
                 <th>Reply</th>
             </tr>
 			<%
+			@SuppressWarnings("unchecked")
 			List<ScreeningDetail> details = (List<ScreeningDetail>) request
 						.getAttribute("details");
 				for (ScreeningDetail d : details) {
@@ -51,9 +52,17 @@
 				<%} %>
         </table>
     </div>
-    <p class="btn-large" style="width:30%;margin:32px auto 0;float: right;"><a href="javascript:postAPI()" onclick="">send a message</a></p>
+    <p class="btn-large" style="width:30%;margin:32px auto 0;float: right;"><a href="javascript:showSendMessage()" onclick="">send a message</a></p>
      <p class="btn-large" style="width:30%;margin:32px auto 0;float: left;"><a href="/doctor/index.html" onclick="">Back</a></p>
 </section>
+</div>
+<div id="message_area" style="display: none;">
+	<input type="text" id="message-content" class="input-message"></input>
+	
+	<br/>
+	<p class="btn-large" style="width:20%;margin: 23px auto 0;float: right;margin-right: 18%;">
+		<a href="javascript:sendMessage()" onclick="" style="text-align: center;">Send</a>
+	</p>
 </div>
 <form action="/doctor/logout" method="POST" name="form_logout">
 	<input type="hidden" th:name="${csrfTokenName}" th:value="${csrfToken2}" />
@@ -86,8 +95,25 @@ function confirm()
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
 }
+function showSendMessage()
+{
+	$('#message_area').show();
+}
+function sendMessage()
+{
+	var receiverName='${nammin_name}';
+	$.ajax({
+		type : "GET",
+		url : "https://refugees.i4.io/FbChatbot/Meessanger?username="+receiverName+"&message="+$('#message-content').val(),
+		success : function(data) {
+			$('#message_area').hide();
+			$('#message-content').val(''),
+			alert('message sent');
+			$('#message_area').hide();
+		}
+	});
+}
 </script>
 
 <script type="text/javascript" src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</html>
 </html>

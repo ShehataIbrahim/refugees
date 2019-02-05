@@ -19,3 +19,9 @@ input,select{vertical-align:middle}
   clear: both;
   display: block;
 }
+.input-message {
+	width: 65%;
+	margin-top: 15px;
+	height: 44px;
+	margin-left: 17%;
+}
