@@ -42,6 +42,7 @@ import com.refugees.portal.db.model.RefugeeUser;
 import com.refugees.portal.db.model.Screening;
 import com.refugees.portal.db.service.RefugeeService;
 import com.refugees.portal.db.service.ScreenedBeforeException;
+import com.refugees.portal.demo.Translator;
 
 @RestController
 @RequestMapping("/callback")
@@ -167,7 +168,7 @@ public class ChatbotCallBack {
 					refugeeUser.setFacebookInfo("1");
 					refugeeService.updateRefugeeUser(refugeeUser);
 					Screening sc= refugeeService.createScreeningData(refugeeUser.getId());
-					String message = bundle.getString("Q1");
+					String message = Translator.translateFromEnglish(refugeeUser.getTranslateLangCode(),bundle.getString("Q1"));
 					
 					if (NotYesNoList.contains(1))
 						sendTextMessage(senderId, message);
@@ -189,7 +190,7 @@ public class ChatbotCallBack {
 					screeningData = refugeeService.getUserScreeningData(refugeeUser.getId());
 					
 				} catch (ScreenedBeforeException e1) {
-					sendTextMessage(senderId, "Thanks for passing by, we will communicate you once done processing");
+					sendTextMessage(senderId, Translator.translateFromEnglish(refugeeUser.getTranslateLangCode(),"Thanks for passing by, we will communicate you once done processing"));
 					return;
 				}
 				int currentQuestionId = Integer.parseInt(refugeeUser.getFacebookInfo());
@@ -204,7 +205,7 @@ public class ChatbotCallBack {
 					refugeeService.updateScreening(screeningData);
 					screeningData.setCompletinggDate(new java.util.Date());
 					refugeeService.updateScreening(screeningData);
-					sendTextMessage(senderId, "Thanks very much for your time we will contact you ASAP");
+					sendTextMessage(senderId, Translator.translateFromEnglish(refugeeUser.getTranslateLangCode(),"Thanks very much for your time we will contact you ASAP"));
 					return;
 				}
 				System.out.println("Going through questioning process");
@@ -217,7 +218,7 @@ public class ChatbotCallBack {
 				refugeeService.updateRefugeeUser(refugeeUser);
 				System.out.println("Reflected updated scanning date");
 				
-				String message = bundle.getString("Q" + nextQuestionId);
+				String message = Translator.translateFromEnglish(refugeeUser.getTranslateLangCode(),bundle.getString("Q" + nextQuestionId));
 				if (NotYesNoList.contains(nextQuestionId))
 					sendTextMessage(senderId, message);
 				else
