@@ -34,6 +34,20 @@ CREATE TABLE public.doctor_user (
 ALTER TABLE public.doctor_user OWNER TO dbadmin;
 
 --
+-- Name: inprogress_facebook_users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.inprogress_facebook_users (
+    sender_id character varying(256) NOT NULL,
+    user_name character varying(256),
+    scanning_date date,
+    user_id integer
+);
+
+
+ALTER TABLE public.inprogress_facebook_users OWNER TO postgres;
+
+--
 -- Name: nammin_answer; Type: TABLE; Schema: public; Owner: dbadmin
 --
 
@@ -296,6 +310,14 @@ doctor-en	a29df15be6eb64e6740bc75183057cbeff9785c0b2fb9750731a383d6281b1fa68545a
 
 
 --
+-- Data for Name: inprogress_facebook_users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.inprogress_facebook_users (sender_id, user_name, scanning_date, user_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: nammin_answer; Type: TABLE DATA; Schema: public; Owner: dbadmin
 --
 
@@ -445,6 +467,14 @@ SELECT pg_catalog.setval('public.screening_screening_id_seq', 7, true);
 
 ALTER TABLE ONLY public.doctor_user
     ADD CONSTRAINT doctor_user_pkey PRIMARY KEY (doctor_id);
+
+
+--
+-- Name: inprogress_facebook_users inprogress_facebook_users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inprogress_facebook_users
+    ADD CONSTRAINT inprogress_facebook_users_pkey PRIMARY KEY (sender_id);
 
 
 --
