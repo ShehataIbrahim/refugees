@@ -9,10 +9,10 @@ public class ScreeningQuestion {
 	private final static List<Integer> TEXT_QUESTIONS=new ArrayList<>();
 	private final static List<Integer> NUMERIC_QUESTIONS=new ArrayList<>();
 	static {
-		TEXT_QUESTIONS.add(4);
 		TEXT_QUESTIONS.add(5);
-		TEXT_QUESTIONS.add(8);
-		NUMERIC_QUESTIONS.add(11);
+		TEXT_QUESTIONS.add(6);
+		TEXT_QUESTIONS.add(9);
+		TEXT_QUESTIONS.add(11);
 	}
 	private int questionId;
 	private int categoryId;
