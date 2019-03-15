@@ -21,7 +21,7 @@
         <td th:text="${r.namminName}"></td>
         <td class="interview-result" th:switch="${r.result}">
         <div th:case="0" style="width: 300px;">
-        	<a th:id="${r.screeningID}" style="width: 60%;float: left;"  href="#" onclick="confirm(this)">Confirm this</a>
+        	<a th:id="${r.screeningID}" style="width: 60%;float: left;background: #f3f3f3b0;"  href="javascript: void(0)">Confirm this</a>
             <a style="width: 35%;float: right;" th:href="@{screening_detail(s_id=${r.screeningID},c_id=${categoryID},n_id=${r.namminID})}">View</a>
             </div>
         </td>
