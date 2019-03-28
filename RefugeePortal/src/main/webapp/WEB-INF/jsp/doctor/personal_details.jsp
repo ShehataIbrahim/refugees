@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
 <meta name="format-detection" content="telephone=no" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Immigration and Refugee Support Portal</title>
+<title>Migrants and Refugee Suport Portal</title>
 <link href="/css/html5-doctor-reset-stylesheet.min.css" rel="stylesheet" />
 <link href="/css/pc-style-basic.css" rel="stylesheet" />
 </head>
@@ -54,6 +54,7 @@
         </table>
     </div>
     <p class="btn-large" style="width:30%;margin:32px auto 0;float: right;"><a href="javascript:showSendMessage()" onclick="">send a message</a></p>
+    <p class="btn-large" style="width:30%;margin:32px auto 0;float: right;margin-right: 5%;background: #f3f3f3b0;"><a href="javascript: void(0)" style="background-color: #f3f3f3b0!important;color: rgba(31,144,228,1);font-weight: normal;" onclick="">Confirm This</a></p>
      <p class="btn-large" style="width:30%;margin:32px auto 0;float: left;"><a href="/doctor/index.html" onclick="">Back</a></p>
 </section>
 </div>

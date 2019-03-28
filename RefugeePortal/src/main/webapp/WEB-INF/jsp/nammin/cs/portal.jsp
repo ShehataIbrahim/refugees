@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Immigration and Refugee Support Portal</title>
+<title>Migrants and Refugee Suport Portal</title>
 <link href="/css/html5-doctor-reset-stylesheet.min.css" rel="stylesheet">
 <link href="/css/mobile-style-basic.css" rel="stylesheet">
 <style>
@@ -26,7 +26,7 @@
 <body>
 <div id="wrapper">
     <div class="header-top">
-         <h1>Immigration and Refugee Support Portal</h1>
+         <h1>Migrants and Refugee Suport Portal</h1>
          <form action="/nammin/logout" method="POST" name="form_logout">
          <%= CSRFFilter.getInputTagString(request) %>
  		<p><a href="javascript:confirmLogout()" onclick="">Odhlásit se</a></p>
@@ -34,7 +34,7 @@
     </div>
     <div id="top">
         <div class="news">
-            <p>NEW</p>
+            <p>News</p>
             <p id="show-msg">Registrace je dokončena</p>
         </div>
         <a href="/nammin/basicinfo" class="menu-btn">

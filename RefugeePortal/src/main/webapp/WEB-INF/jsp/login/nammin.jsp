@@ -7,14 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Immigration and Refugee Support Portal</title>
+<title>Migrants and Refugee Suport Portal</title>
 <link href="/css/html5-doctor-reset-stylesheet.min.css" rel="stylesheet">
 <link href="/css/mobile-style-basic.css" rel="stylesheet">
 </head>
 <body>
 <div id="wrapper">
 	<div class="header header-no-btn" id="login-header">
-		<h1>Immigration and Refugee Support Portal</h1>
+		<h1>Migrants and Refugee Suport Portal</h1>
 	</div>
 
 	<div id="medical-inquiry-data">

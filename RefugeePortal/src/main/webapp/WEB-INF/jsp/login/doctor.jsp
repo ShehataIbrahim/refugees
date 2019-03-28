@@ -13,7 +13,7 @@
 <div id="wrapper">
 	<header>
 		<div>
-			<h1><a href="javascript:void(0)">Immigration and Refugee Support Portal (Doctors)</a></h1>
+			<h1><a href="javascript:void(0)">Migrants and Refugee Suport Portal (Doctors)</a></h1>
 		</div>
 	</header>
 	<section>
